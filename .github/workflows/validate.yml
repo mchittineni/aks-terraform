@@ -1,14 +1,9 @@
 name: "Terraform Validate & Security"
 
 on:
-  push:
-    branches:
-      - main
-      - feat/*
-      - fix/*
   pull_request:
-    branches:
-      - main
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
 
 permissions:
   contents: read
