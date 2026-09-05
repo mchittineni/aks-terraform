@@ -3,9 +3,12 @@
 [![Terraform Validate & Security](https://github.com/mchittineni/aks-terraform/actions/workflows/validate.yml/badge.svg)](https://github.com/mchittineni/aks-terraform/actions/workflows/validate.yml)
 [![Terraform Plan & Diagram](https://github.com/mchittineni/aks-terraform/actions/workflows/plan.yml/badge.svg)](https://github.com/mchittineni/aks-terraform/actions/workflows/plan.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Terraform](https://img.shields.io/badge/Terraform-%3E%3D1.16.1-844FBA?logo=terraform)](https://www.terraform.io/)
-[![Kubernetes](https://img.shields.io/badge/Kubernetes-1.32-326CE5?logo=kubernetes)](https://kubernetes.io/)
-[![Azure](https://img.shields.io/badge/Azure-Cloud-0089D6?logo=microsoftazure)](https://azure.microsoft.com/)
+[![Terraform](https://img.shields.io/badge/Terraform-1.16+-623CE4?logo=terraform&logoColor=white)](https://www.terraform.io/)
+[![Azure Provider](https://img.shields.io/badge/Azure%20Provider-~%3E%204.20.0-0089D6?logo=microsoftazure&logoColor=white)](https://registry.terraform.io/providers/hashicorp/azurerm/latest)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-1.32+-326CE5?logo=kubernetes&logoColor=white)](https://kubernetes.io/)
+[![Architecture Diagram](https://img.shields.io/badge/Architecture%20Diagram-tf--arch-blue?logo=diagramsdotnet)](https://github.com/mchittineni/tf-arch-diagram-generator)
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?logo=github-actions&logoColor=white)](https://github.com/features/actions)
+[![Code Quality](https://img.shields.io/badge/Quality-Checkov%20%26%20TFLint-success)](https://github.com/terraform-linters/tflint)
 
 A production-grade, modular Infrastructure-as-Code (IaC) solution for provisioning a secure, highly-available **Azure Kubernetes Service (AKS)** environment with automated CI/CD pipelines, security compliance auditing, and interactive cloud architecture diagram generation.
 
