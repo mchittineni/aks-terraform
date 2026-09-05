@@ -1,0 +1,1367 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="1166" viewBox="0 0 940 1166" role="img" aria-label="Azure AKS Architecture">
+  <title>Azure AKS Architecture</title>
+  
+  
+  <style>
+    .diagram-node { cursor: pointer; transition: opacity 0.25s ease; }
+    .diagram-node .node-card { transition: stroke 0.2s ease, stroke-width 0.2s ease; }
+    .diagram-node:hover .node-card { stroke: #38bdf8; stroke-width: 2.5px; }
+    .diagram-edge { cursor: pointer; transition: opacity 0.25s ease; }
+    .diagram-edge .edge-path { transition: stroke 0.2s ease, stroke-width 0.2s ease; }
+    .diagram-edge .edge-flow {
+      stroke-dasharray: 4 14;
+      animation: tfarch-flow 1.6s linear infinite;
+      pointer-events: none;
+    }
+    .diagram-edge:hover .edge-path,
+    .diagram-edge.active .edge-path { stroke: #38bdf8; stroke-width: 2.4px; }
+    .diagram-edge:hover .edge-flow,
+    .diagram-edge.active .edge-flow { stroke: #7dd3fc; stroke-opacity: 0.9; animation-duration: 0.8s; }
+    .diagram-edge.edge-inbound .edge-path { stroke: #38bdf8; stroke-width: 2.4px; marker-end: url(#arrowhead-inbound); }
+    .diagram-edge.edge-inbound .edge-flow { stroke: #7dd3fc; stroke-opacity: 0.95; }
+    .diagram-edge.edge-outbound .edge-path { stroke: #c084fc; stroke-width: 2.4px; marker-end: url(#arrowhead-outbound); }
+    .diagram-edge.edge-outbound .edge-flow { stroke: #d8b4fe; stroke-opacity: 0.95; }
+    .diagram-edge.edge-security .edge-path { stroke: #f59e0b; }
+    .diagram-edge.edge-security .edge-flow { stroke: #fbbf24; }
+    .diagram-edge.selected .edge-path { stroke: #38bdf8; stroke-width: 2.8px; }
+    .diagram-node.dim, .diagram-edge.dim { opacity: 0.12; }
+    @keyframes tfarch-flow { to { stroke-dashoffset: -18; } }
+    @media (prefers-reduced-motion: reduce) {
+      .diagram-edge .edge-flow { animation: none; }
+    }
+  </style>
+
+  <defs>
+    <filter id="node-shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.45"/>
+    </filter>
+    <filter id="node-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#38bdf8" flood-opacity="0.6"/>
+    </filter>
+    <marker id="arrowhead" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0.5, 8 3.5, 0 6.5" fill="#94a3b8" />
+    </marker>
+    <marker id="arrowhead-active" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0.5, 8 3.5, 0 6.5" fill="#38bdf8" />
+    </marker>
+    <marker id="arrowhead-inbound" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0.5, 8 3.5, 0 6.5" fill="#38bdf8" />
+    </marker>
+    <marker id="arrowhead-outbound" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0.5, 8 3.5, 0 6.5" fill="#c084fc" />
+    </marker>
+    <marker id="arrowhead-security" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0.5, 8 3.5, 0 6.5" fill="#f59e0b" />
+    </marker>
+  </defs>
+
+  <rect width="940" height="1166" fill="#0b1120"/>
+  <text x="40" y="36" fill="#f8fafc" font-size="18" font-weight="800" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Azure AKS Architecture</text>
+  <g transform="translate(0, 26)">
+    <g class="containers-layer">
+    <g class="container-subnet" data-id="azurerm_subnet.aks_system">
+      <rect x="100" y="136" width="212" height="158" rx="6"
+        fill="rgba(255, 255, 255, 0.02)" stroke="rgba(148, 163, 184, 0.3)" stroke-width="1.5" />
+      <text x="110" y="152" fill="#94a3b8" font-size="10" font-weight="600" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">
+        private · Subnet: aks_system
+      </text>
+      <text x="110" y="166" fill="#64748b" font-size="9" font-family="'JetBrains Mono', ui-monospace, monospace">10.40.0.0/20</text>
+    </g>
+  
+    <g class="container-subnet" data-id="azurerm_subnet.aks_user">
+      <rect x="100" y="318" width="212" height="158" rx="6"
+        fill="rgba(255, 255, 255, 0.02)" stroke="rgba(148, 163, 184, 0.3)" stroke-width="1.5" />
+      <text x="110" y="334" fill="#94a3b8" font-size="10" font-weight="600" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">
+        private · Subnet: aks_user
+      </text>
+      <text x="110" y="348" fill="#64748b" font-size="9" font-family="'JetBrains Mono', ui-monospace, monospace">10.40.16.0/20</text>
+    </g>
+  
+    <g class="container-subnet" data-id="azurerm_subnet.data">
+      <rect x="100" y="500" width="212" height="158" rx="6"
+        fill="rgba(255, 255, 255, 0.02)" stroke="rgba(148, 163, 184, 0.3)" stroke-width="1.5" />
+      <text x="110" y="516" fill="#94a3b8" font-size="10" font-weight="600" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">
+        private · Subnet: data
+      </text>
+      <text x="110" y="530" fill="#64748b" font-size="9" font-family="'JetBrains Mono', ui-monospace, monospace">10.40.32.0/24</text>
+    </g>
+  
+    <g class="container-zone" data-id="zone-azure-azurerm_virtual_network.platform-Default Availability Zone">
+      <rect x="84" y="106" width="244" height="584" rx="8"
+        fill="rgba(255,255,255,0.015)" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" stroke-dasharray="4 2" />
+      <text x="96" y="124" fill="#94a3b8" font-size="10" font-weight="600" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">
+        Availability Zone: Default Availability Zone
+      </text>
+    </g>
+  
+    <g class="container-network" data-id="azurerm_virtual_network.platform">
+      <rect x="60" y="60" width="480" height="658" rx="12"
+        fill="rgba(0, 120, 212, 0.04)" stroke="#10b981" stroke-width="2" stroke-dasharray="6 3" />
+      <rect x="60" y="60" width="480" height="32" rx="12" fill="rgba(0, 120, 212, 0.15)" />
+      <text x="76" y="80" fill="#e2e8f0" font-size="12" font-weight="700" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">
+        Virtual Network: platform<tspan fill="#94a3b8" font-weight="400"> (10.40.0.0/16)</tspan>
+      </text>
+    </g>
+  </g>
+    <g class="edges-layer">
+      <g class="diagram-edge edge-solid "
+         data-id="edge-24"
+         data-source="azurerm_resource_group.platform"
+         data-target="azurerm_kubernetes_cluster.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_resource_group.platform ➔ azurerm_kubernetes_cluster.platform (References)</title>
+        <path class="edge-hit" d="M 153.8 768 C 153.8 539.4, 202 488.6, 202 260" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 153.8 768 C 153.8 539.4, 202 488.6, 202 260" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 153.8 768 C 153.8 539.4, 202 488.6, 202 260" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="143.9" y="505" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="177.9" y="517" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-dependency "
+         data-id="edge-25"
+         data-source="azurerm_resource_group.platform"
+         data-target="azurerm_container_registry.platform"
+         data-label="Image Pull"
+         data-type="dependency">
+        <title>azurerm_resource_group.platform ➔ azurerm_container_registry.platform (Image Pull)</title>
+        <path class="edge-hit" d="M 240 808 C 257.1 808, 260.9 808, 278 808" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 240 808 C 257.1 808, 260.9 808, 278 808" fill="none" stroke="rgba(129, 140, 248, 0.4)" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 240 808 C 257.1 808, 260.9 808, 278 808" fill="none" stroke="#a5b4fc" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="225" y="799" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="259" y="811" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Image Pull</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-26"
+         data-source="azurerm_resource_group.platform"
+         data-target="azurerm_servicebus_namespace.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_resource_group.platform ➔ azurerm_servicebus_namespace.platform (References)</title>
+        <path class="edge-hit" d="M 240 808 C 356.1 808, 381.9 808, 498 808" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 240 808 C 356.1 808, 381.9 808, 498 808" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 240 808 C 356.1 808, 381.9 808, 498 808" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="335" y="799" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="369" y="811" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-security "
+         data-id="edge-27"
+         data-source="azurerm_resource_group.platform"
+         data-target="azurerm_key_vault.platform"
+         data-label="Secrets"
+         data-type="security">
+        <title>azurerm_resource_group.platform ➔ azurerm_key_vault.platform (Secrets)</title>
+        <path class="edge-hit" d="M 240 829.3 C 356.145 829.3, 381.95500000000004 890.3, 498.1 890.3" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 240 829.3 C 356.145 829.3, 381.95500000000004 890.3, 498.1 890.3" fill="none" stroke="rgba(245, 158, 11, 0.45)" stroke-width="1.8" stroke-dasharray="5 3" marker-end="url(#arrowhead-security)"/>
+        <path class="edge-flow" d="M 240 829.3 C 356.145 829.3, 381.95500000000004 890.3, 498.1 890.3" fill="none" stroke="#fbbf24" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="343.45" y="850.8" width="51.199999999999996" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(245, 158, 11, 0.3)"/>
+            <text x="369.05" y="862.8" text-anchor="middle" fill="#fde68a" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Secrets</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-28"
+         data-source="azurerm_resource_group.platform"
+         data-target="azurerm_log_analytics_workspace.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_resource_group.platform ➔ azurerm_log_analytics_workspace.platform (References)</title>
+        <path class="edge-hit" d="M 192.3 848 C 252.555 848, 265.945 974.6, 326.2 974.6" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 192.3 848 C 252.555 848, 265.945 974.6, 326.2 974.6" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 192.3 848 C 252.555 848, 265.945 974.6, 326.2 974.6" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="225.25" y="902.3" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="259.25" y="914.3" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-29"
+         data-source="azurerm_kubernetes_cluster.platform"
+         data-target="azurerm_resource_group.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_kubernetes_cluster.platform ➔ azurerm_resource_group.platform (References)</title>
+        <path class="edge-hit" d="M 202.2 258 C 202.2 486.6, 154 537.4, 154 766" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 202.2 258 C 202.2 486.6, 154 537.4, 154 766" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 202.2 258 C 202.2 486.6, 154 537.4, 154 766" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="144.1" y="503" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="178.1" y="515" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-dependency "
+         data-id="edge-30"
+         data-source="azurerm_kubernetes_cluster.platform"
+         data-target="azurerm_container_registry.platform"
+         data-label="Image Pull"
+         data-type="dependency">
+        <title>azurerm_kubernetes_cluster.platform ➔ azurerm_container_registry.platform (Image Pull)</title>
+        <path class="edge-hit" d="M 217.1 258 C 217.1 486.645, 358.3 537.455, 358.3 766.1" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 217.1 258 C 217.1 486.645, 358.3 537.455, 358.3 766.1" fill="none" stroke="rgba(129, 140, 248, 0.4)" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 217.1 258 C 217.1 486.645, 358.3 537.455, 358.3 766.1" fill="none" stroke="#a5b4fc" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="253.7" y="503.04999999999995" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="287.7" y="515.05" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Image Pull</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-31"
+         data-source="azurerm_kubernetes_cluster.platform"
+         data-target="azurerm_servicebus_namespace.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_kubernetes_cluster.platform ➔ azurerm_servicebus_namespace.platform (References)</title>
+        <path class="edge-hit" d="M 232 258 C 232 486.735, 562.9 537.5649999999999, 562.9 766.3" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 232 258 C 232 486.735, 562.9 537.5649999999999, 562.9 766.3" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 232 258 C 232 486.735, 562.9 537.5649999999999, 562.9 766.3" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="363.45" y="503.15" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="397.45" y="515.15" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-security "
+         data-id="edge-32"
+         data-source="azurerm_kubernetes_cluster.platform"
+         data-target="azurerm_key_vault.platform"
+         data-label="Secrets"
+         data-type="security">
+        <title>azurerm_kubernetes_cluster.platform ➔ azurerm_key_vault.platform (Secrets)</title>
+        <path class="edge-hit" d="M 228.1 258 C 228.1 533.535, 566.9 594.765, 566.9 870.3" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 228.1 258 C 228.1 533.535, 566.9 594.765, 566.9 870.3" fill="none" stroke="rgba(245, 158, 11, 0.45)" stroke-width="1.8" stroke-dasharray="5 3" marker-end="url(#arrowhead-security)"/>
+        <path class="edge-flow" d="M 228.1 258 C 228.1 533.535, 566.9 594.765, 566.9 870.3" fill="none" stroke="#fbbf24" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="371.9" y="555.15" width="51.199999999999996" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(245, 158, 11, 0.3)"/>
+            <text x="397.5" y="567.15" text-anchor="middle" fill="#fde68a" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Secrets</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-33"
+         data-source="azurerm_kubernetes_cluster.platform"
+         data-target="azurerm_log_analytics_workspace.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_kubernetes_cluster.platform ➔ azurerm_log_analytics_workspace.platform (References)</title>
+        <path class="edge-hit" d="M 214.2 258 C 214.2 580.2, 361.4 651.8, 361.4 974" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 214.2 258 C 214.2 580.2, 361.4 651.8, 361.4 974" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 214.2 258 C 214.2 580.2, 361.4 651.8, 361.4 974" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="253.79999999999995" y="607" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="287.79999999999995" y="619" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-35"
+         data-source="azurerm_container_registry.platform"
+         data-target="azurerm_resource_group.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_container_registry.platform ➔ azurerm_resource_group.platform (References)</title>
+        <path class="edge-hit" d="M 280 808 C 262.9 808, 259.1 808, 242 808" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 280 808 C 262.9 808, 259.1 808, 242 808" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 280 808 C 262.9 808, 259.1 808, 242 808" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="227" y="799" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="261" y="811" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-36"
+         data-source="azurerm_container_registry.platform"
+         data-target="azurerm_kubernetes_cluster.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_container_registry.platform ➔ azurerm_kubernetes_cluster.platform (References)</title>
+        <path class="edge-hit" d="M 358.9 768 C 358.9 539.355, 217.7 488.54499999999996, 217.7 259.9" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 358.9 768 C 358.9 539.355, 217.7 488.54499999999996, 217.7 259.9" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 358.9 768 C 358.9 539.355, 217.7 488.54499999999996, 217.7 259.9" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="254.29999999999995" y="504.95000000000005" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="288.29999999999995" y="516.95" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-37"
+         data-source="azurerm_container_registry.platform"
+         data-target="azurerm_servicebus_namespace.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_container_registry.platform ➔ azurerm_servicebus_namespace.platform (References)</title>
+        <path class="edge-hit" d="M 460 808 C 477.1 808, 480.9 808, 498 808" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 460 808 C 477.1 808, 480.9 808, 498 808" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 460 808 C 477.1 808, 480.9 808, 498 808" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="445" y="799" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="479" y="811" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-security "
+         data-id="edge-38"
+         data-source="azurerm_container_registry.platform"
+         data-target="azurerm_key_vault.platform"
+         data-label="Secrets"
+         data-type="security">
+        <title>azurerm_container_registry.platform ➔ azurerm_key_vault.platform (Secrets)</title>
+        <path class="edge-hit" d="M 454.6 848 C 476.65000000000003 848, 481.55 871.1, 503.6 871.1" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 454.6 848 C 476.65000000000003 848, 481.55 871.1, 503.6 871.1" fill="none" stroke="rgba(245, 158, 11, 0.45)" stroke-width="1.8" stroke-dasharray="5 3" marker-end="url(#arrowhead-security)"/>
+        <path class="edge-flow" d="M 454.6 848 C 476.65000000000003 848, 481.55 871.1, 503.6 871.1" fill="none" stroke="#fbbf24" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="453.5" y="850.55" width="51.199999999999996" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(245, 158, 11, 0.3)"/>
+            <text x="479.1" y="862.55" text-anchor="middle" fill="#fde68a" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Secrets</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-39"
+         data-source="azurerm_container_registry.platform"
+         data-target="azurerm_log_analytics_workspace.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_container_registry.platform ➔ azurerm_log_analytics_workspace.platform (References)</title>
+        <path class="edge-hit" d="M 370 848 C 370 904.7, 370 917.3, 370 974" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 370 848 C 370 904.7, 370 917.3, 370 974" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 370 848 C 370 904.7, 370 917.3, 370 974" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="336" y="902" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="370" y="914" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-41"
+         data-source="azurerm_servicebus_namespace.platform"
+         data-target="azurerm_resource_group.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_servicebus_namespace.platform ➔ azurerm_resource_group.platform (References)</title>
+        <path class="edge-hit" d="M 500 808 C 383.9 808, 358.1 808, 242 808" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 500 808 C 383.9 808, 358.1 808, 242 808" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 500 808 C 383.9 808, 358.1 808, 242 808" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="337" y="799" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="371" y="811" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-42"
+         data-source="azurerm_servicebus_namespace.platform"
+         data-target="azurerm_kubernetes_cluster.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_servicebus_namespace.platform ➔ azurerm_kubernetes_cluster.platform (References)</title>
+        <path class="edge-hit" d="M 564 768 C 564 539.265, 233.1 488.435, 233.1 259.7" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 564 768 C 564 539.265, 233.1 488.435, 233.1 259.7" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 564 768 C 564 539.265, 233.1 488.435, 233.1 259.7" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="364.55" y="504.85" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="398.55" y="516.85" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-dependency "
+         data-id="edge-43"
+         data-source="azurerm_servicebus_namespace.platform"
+         data-target="azurerm_container_registry.platform"
+         data-label="Image Pull"
+         data-type="dependency">
+        <title>azurerm_servicebus_namespace.platform ➔ azurerm_container_registry.platform (Image Pull)</title>
+        <path class="edge-hit" d="M 500 808 C 482.9 808, 479.1 808, 462 808" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 500 808 C 482.9 808, 479.1 808, 462 808" fill="none" stroke="rgba(129, 140, 248, 0.4)" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 500 808 C 482.9 808, 479.1 808, 462 808" fill="none" stroke="#a5b4fc" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="447" y="799" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="481" y="811" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Image Pull</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-security "
+         data-id="edge-44"
+         data-source="azurerm_servicebus_namespace.platform"
+         data-target="azurerm_key_vault.platform"
+         data-label="Secrets"
+         data-type="security">
+        <title>azurerm_servicebus_namespace.platform ➔ azurerm_key_vault.platform (Secrets)</title>
+        <path class="edge-hit" d="M 590 848 C 590 857.9, 590 860.1, 590 870" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 590 848 C 590 857.9, 590 860.1, 590 870" fill="none" stroke="rgba(245, 158, 11, 0.45)" stroke-width="1.8" stroke-dasharray="5 3" marker-end="url(#arrowhead-security)"/>
+        <path class="edge-flow" d="M 590 848 C 590 857.9, 590 860.1, 590 870" fill="none" stroke="#fbbf24" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="564.4" y="850" width="51.199999999999996" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(245, 158, 11, 0.3)"/>
+            <text x="590" y="862" text-anchor="middle" fill="#fde68a" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Secrets</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-45"
+         data-source="azurerm_servicebus_namespace.platform"
+         data-target="azurerm_log_analytics_workspace.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_servicebus_namespace.platform ➔ azurerm_log_analytics_workspace.platform (References)</title>
+        <path class="edge-hit" d="M 547.7 848 C 487.44500000000005 848, 474.055 974.6, 413.8 974.6" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 547.7 848 C 487.44500000000005 848, 474.055 974.6, 413.8 974.6" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 547.7 848 C 487.44500000000005 848, 474.055 974.6, 413.8 974.6" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="446.75" y="902.3" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="480.75" y="914.3" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-46"
+         data-source="azurerm_servicebus_topic.orders"
+         data-target="azurerm_servicebus_queue.dead_letter"
+         data-label="Messaging"
+         data-type="solid">
+        <title>azurerm_servicebus_topic.orders ➔ azurerm_servicebus_queue.dead_letter (Messaging)</title>
+        <path class="edge-hit" d="M 720 822.2 C 504.9 822.2, 457.1 897.5, 242 897.5" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 720 822.2 C 504.9 822.2, 457.1 897.5, 242 897.5" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 720 822.2 C 504.9 822.2, 457.1 897.5, 242 897.5" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="449.8" y="850.85" width="62.4" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="481" y="862.85" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Messaging</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-47"
+         data-source="azurerm_servicebus_queue.dead_letter"
+         data-target="azurerm_servicebus_topic.orders"
+         data-label="Messaging"
+         data-type="solid">
+        <title>azurerm_servicebus_queue.dead_letter ➔ azurerm_servicebus_topic.orders (Messaging)</title>
+        <path class="edge-hit" d="M 240 897.8 C 455.1 897.8, 502.9 822.5, 718 822.5" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 240 897.8 C 455.1 897.8, 502.9 822.5, 718 822.5" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 240 897.8 C 455.1 897.8, 502.9 822.5, 718 822.5" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="447.8" y="851.15" width="62.4" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="479" y="863.15" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Messaging</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-49"
+         data-source="azurerm_key_vault.platform"
+         data-target="azurerm_resource_group.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_key_vault.platform ➔ azurerm_resource_group.platform (References)</title>
+        <path class="edge-hit" d="M 500 890.7 C 383.855 890.7, 358.045 829.7, 241.9 829.7" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 500 890.7 C 383.855 890.7, 358.045 829.7, 241.9 829.7" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 500 890.7 C 383.855 890.7, 358.045 829.7, 241.9 829.7" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="336.95" y="851.2" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="370.95" y="863.2" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-50"
+         data-source="azurerm_key_vault.platform"
+         data-target="azurerm_kubernetes_cluster.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_key_vault.platform ➔ azurerm_kubernetes_cluster.platform (References)</title>
+        <path class="edge-hit" d="M 567.9 872 C 567.9 596.465, 229.1 535.2349999999999, 229.1 259.7" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 567.9 872 C 567.9 596.465, 229.1 535.2349999999999, 229.1 259.7" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 567.9 872 C 567.9 596.465, 229.1 535.2349999999999, 229.1 259.7" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="364.5" y="556.85" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="398.5" y="568.85" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-dependency "
+         data-id="edge-51"
+         data-source="azurerm_key_vault.platform"
+         data-target="azurerm_container_registry.platform"
+         data-label="Image Pull"
+         data-type="dependency">
+        <title>azurerm_key_vault.platform ➔ azurerm_container_registry.platform (Image Pull)</title>
+        <path class="edge-hit" d="M 505.4 872 C 483.34999999999997 872, 478.45 848.9, 456.4 848.9" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 505.4 872 C 483.34999999999997 872, 478.45 848.9, 456.4 848.9" fill="none" stroke="rgba(129, 140, 248, 0.4)" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 505.4 872 C 483.34999999999997 872, 478.45 848.9, 456.4 848.9" fill="none" stroke="#a5b4fc" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="446.9" y="851.45" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="480.9" y="863.45" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Image Pull</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-52"
+         data-source="azurerm_key_vault.platform"
+         data-target="azurerm_servicebus_namespace.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_key_vault.platform ➔ azurerm_servicebus_namespace.platform (References)</title>
+        <path class="edge-hit" d="M 590 872 C 590 862.1, 590 859.9, 590 850" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 590 872 C 590 862.1, 590 859.9, 590 850" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 590 872 C 590 862.1, 590 859.9, 590 850" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="556" y="852" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="590" y="864" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-53"
+         data-source="azurerm_key_vault.platform"
+         data-target="azurerm_log_analytics_workspace.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_key_vault.platform ➔ azurerm_log_analytics_workspace.platform (References)</title>
+        <path class="edge-hit" d="M 505.4 952 C 483.34999999999997 952, 478.45 975.1, 456.4 975.1" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 505.4 952 C 483.34999999999997 952, 478.45 975.1, 456.4 975.1" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 505.4 952 C 483.34999999999997 952, 478.45 975.1, 456.4 975.1" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="446.9" y="954.55" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="480.9" y="966.55" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-55"
+         data-source="azurerm_role_assignment.acr_pull"
+         data-target="azurerm_resource_group.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_role_assignment.acr_pull ➔ azurerm_resource_group.platform (References)</title>
+        <path class="edge-hit" d="M 150 976 C 150 919.3, 150 906.7, 150 850" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 150 976 C 150 919.3, 150 906.7, 150 850" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 150 976 C 150 919.3, 150 906.7, 150 850" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="116" y="904" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="150" y="916" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-56"
+         data-source="azurerm_role_assignment.acr_pull"
+         data-target="azurerm_kubernetes_cluster.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_role_assignment.acr_pull ➔ azurerm_kubernetes_cluster.platform (References)</title>
+        <path class="edge-hit" d="M 152.8 976 C 152.8 653.8, 203.1 582.2, 203.1 260" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 152.8 976 C 152.8 653.8, 203.1 582.2, 203.1 260" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 152.8 976 C 152.8 653.8, 203.1 582.2, 203.1 260" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="143.95" y="609" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="177.95" y="621" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-dependency "
+         data-id="edge-57"
+         data-source="azurerm_role_assignment.acr_pull"
+         data-target="azurerm_container_registry.platform"
+         data-label="Image Pull"
+         data-type="dependency">
+        <title>azurerm_role_assignment.acr_pull ➔ azurerm_container_registry.platform (Image Pull)</title>
+        <path class="edge-hit" d="M 192.3 976 C 252.555 976, 265.945 849.4, 326.2 849.4" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 192.3 976 C 252.555 976, 265.945 849.4, 326.2 849.4" fill="none" stroke="rgba(129, 140, 248, 0.4)" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 192.3 976 C 252.555 976, 265.945 849.4, 326.2 849.4" fill="none" stroke="#a5b4fc" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="225.25" y="903.7" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="259.25" y="915.7" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Image Pull</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-58"
+         data-source="azurerm_role_assignment.acr_pull"
+         data-target="azurerm_servicebus_namespace.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_role_assignment.acr_pull ➔ azurerm_servicebus_namespace.platform (References)</title>
+        <path class="edge-hit" d="M 234.6 976 C 355.65 976, 382.55 848.9, 503.6 848.9" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 234.6 976 C 355.65 976, 382.55 848.9, 503.6 848.9" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 234.6 976 C 355.65 976, 382.55 848.9, 503.6 848.9" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="335.1" y="903.45" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="369.1" y="915.45" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-security "
+         data-id="edge-59"
+         data-source="azurerm_role_assignment.acr_pull"
+         data-target="azurerm_key_vault.platform"
+         data-label="Secrets"
+         data-type="security">
+        <title>azurerm_role_assignment.acr_pull ➔ azurerm_key_vault.platform (Secrets)</title>
+        <path class="edge-hit" d="M 240 994.7 C 356.145 994.7, 381.95500000000004 933.7, 498.1 933.7" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 240 994.7 C 356.145 994.7, 381.95500000000004 933.7, 498.1 933.7" fill="none" stroke="rgba(245, 158, 11, 0.45)" stroke-width="1.8" stroke-dasharray="5 3" marker-end="url(#arrowhead-security)"/>
+        <path class="edge-flow" d="M 240 994.7 C 356.145 994.7, 381.95500000000004 933.7, 498.1 933.7" fill="none" stroke="#fbbf24" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="343.45" y="955.2" width="51.199999999999996" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(245, 158, 11, 0.3)"/>
+            <text x="369.05" y="967.2" text-anchor="middle" fill="#fde68a" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Secrets</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-60"
+         data-source="azurerm_role_assignment.acr_pull"
+         data-target="azurerm_log_analytics_workspace.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_role_assignment.acr_pull ➔ azurerm_log_analytics_workspace.platform (References)</title>
+        <path class="edge-hit" d="M 240 1016 C 257.1 1016, 260.9 1016, 278 1016" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 240 1016 C 257.1 1016, 260.9 1016, 278 1016" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 240 1016 C 257.1 1016, 260.9 1016, 278 1016" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="225" y="1007" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="259" y="1019" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-62"
+         data-source="azurerm_log_analytics_workspace.platform"
+         data-target="azurerm_resource_group.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_log_analytics_workspace.platform ➔ azurerm_resource_group.platform (References)</title>
+        <path class="edge-hit" d="M 327.7 976 C 267.445 976, 254.055 849.4, 193.8 849.4" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 327.7 976 C 267.445 976, 254.055 849.4, 193.8 849.4" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 327.7 976 C 267.445 976, 254.055 849.4, 193.8 849.4" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="226.75" y="903.7" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="260.75" y="915.7" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-63"
+         data-source="azurerm_log_analytics_workspace.platform"
+         data-target="azurerm_kubernetes_cluster.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_log_analytics_workspace.platform ➔ azurerm_kubernetes_cluster.platform (References)</title>
+        <path class="edge-hit" d="M 361.8 976 C 361.8 653.8, 214.6 582.2, 214.6 260" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 361.8 976 C 361.8 653.8, 214.6 582.2, 214.6 260" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 361.8 976 C 361.8 653.8, 214.6 582.2, 214.6 260" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="254.2" y="609" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="288.2" y="621" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-dependency "
+         data-id="edge-64"
+         data-source="azurerm_log_analytics_workspace.platform"
+         data-target="azurerm_container_registry.platform"
+         data-label="Image Pull"
+         data-type="dependency">
+        <title>azurerm_log_analytics_workspace.platform ➔ azurerm_container_registry.platform (Image Pull)</title>
+        <path class="edge-hit" d="M 370 976 C 370 919.3, 370 906.7, 370 850" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 370 976 C 370 919.3, 370 906.7, 370 850" fill="none" stroke="rgba(129, 140, 248, 0.4)" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 370 976 C 370 919.3, 370 906.7, 370 850" fill="none" stroke="#a5b4fc" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="336" y="904" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="370" y="916" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Image Pull</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-65"
+         data-source="azurerm_log_analytics_workspace.platform"
+         data-target="azurerm_servicebus_namespace.platform"
+         data-label="References"
+         data-type="solid">
+        <title>azurerm_log_analytics_workspace.platform ➔ azurerm_servicebus_namespace.platform (References)</title>
+        <path class="edge-hit" d="M 412.3 976 C 472.555 976, 485.94500000000005 849.4, 546.2 849.4" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 412.3 976 C 472.555 976, 485.94500000000005 849.4, 546.2 849.4" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 412.3 976 C 472.555 976, 485.94500000000005 849.4, 546.2 849.4" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="445.25" y="903.7" width="68" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="479.25" y="915.7" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">References</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-security "
+         data-id="edge-66"
+         data-source="azurerm_log_analytics_workspace.platform"
+         data-target="azurerm_key_vault.platform"
+         data-label="Secrets"
+         data-type="security">
+        <title>azurerm_log_analytics_workspace.platform ➔ azurerm_key_vault.platform (Secrets)</title>
+        <path class="edge-hit" d="M 454.6 976 C 476.65000000000003 976, 481.55 952.9, 503.6 952.9" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 454.6 976 C 476.65000000000003 976, 481.55 952.9, 503.6 952.9" fill="none" stroke="rgba(245, 158, 11, 0.45)" stroke-width="1.8" stroke-dasharray="5 3" marker-end="url(#arrowhead-security)"/>
+        <path class="edge-flow" d="M 454.6 976 C 476.65000000000003 976, 481.55 952.9, 503.6 952.9" fill="none" stroke="#fbbf24" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="453.5" y="955.45" width="51.199999999999996" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(245, 158, 11, 0.3)"/>
+            <text x="479.1" y="967.45" text-anchor="middle" fill="#fde68a" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Secrets</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-dependency "
+         data-id="edge-67"
+         data-source="azurerm_kubernetes_cluster.platform"
+         data-target="azurerm_kubernetes_cluster_node_pool.apps"
+         data-label="Managed"
+         data-type="dependency">
+        <title>azurerm_kubernetes_cluster.platform ➔ azurerm_kubernetes_cluster_node_pool.apps (Managed)</title>
+        <path class="edge-hit" d="M 206 258 C 206 303, 206 313, 206 358" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 206 258 C 206 303, 206 313, 206 358" fill="none" stroke="rgba(129, 140, 248, 0.4)" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 206 258 C 206 303, 206 313, 206 358" fill="none" stroke="#a5b4fc" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="180.4" y="299" width="51.199999999999996" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="206" y="311" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Managed</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-68"
+         data-source="azurerm_container_registry.platform"
+         data-target="azurerm_kubernetes_cluster_node_pool.apps"
+         data-label="Container Image"
+         data-type="solid">
+        <title>azurerm_container_registry.platform ➔ azurerm_kubernetes_cluster_node_pool.apps (Container Image)</title>
+        <path class="edge-hit" d="M 353.9 768 C 353.9 621.255, 222.8 588.645, 222.8 441.9" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 353.9 768 C 353.9 621.255, 222.8 588.645, 222.8 441.9" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 353.9 768 C 353.9 621.255, 222.8 588.645, 222.8 441.9" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="240.35000000000002" y="595.95" width="96" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="288.35" y="607.95" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Container Image</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-69"
+         data-source="azurerm_container_registry.platform"
+         data-target="azurerm_linux_function_app.reconciler"
+         data-label="Container Image"
+         data-type="solid">
+        <title>azurerm_container_registry.platform ➔ azurerm_linux_function_app.reconciler (Container Image)</title>
+        <path class="edge-hit" d="M 370 848 C 370 857.9, 370 860.1, 370 870" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 370 848 C 370 857.9, 370 860.1, 370 870" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 370 848 C 370 857.9, 370 860.1, 370 870" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="322" y="850" width="96" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="370" y="862" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Container Image</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-70"
+         data-source="azurerm_linux_function_app.reconciler"
+         data-target="azurerm_postgresql_flexible_server.core"
+         data-label="SQL TCP:5432/3306"
+         data-type="solid">
+        <title>azurerm_linux_function_app.reconciler ➔ azurerm_postgresql_flexible_server.core (SQL TCP:5432/3306)</title>
+        <path class="edge-hit" d="M 350.1 872 C 350.1 760.31, 226.8 735.49, 226.8 623.8" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 350.1 872 C 350.1 760.31, 226.8 735.49, 226.8 623.8" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 350.1 872 C 350.1 760.31, 226.8 735.49, 226.8 623.8" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="234.85000000000005" y="738.9" width="107.19999999999999" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="288.45000000000005" y="750.9" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">SQL TCP:5432/3306</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-security "
+         data-id="edge-71"
+         data-source="azurerm_linux_function_app.reconciler"
+         data-target="azurerm_key_vault.platform"
+         data-label="Secrets"
+         data-type="security">
+        <title>azurerm_linux_function_app.reconciler ➔ azurerm_key_vault.platform (Secrets)</title>
+        <path class="edge-hit" d="M 460 912 C 477.1 912, 480.9 912, 498 912" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 460 912 C 477.1 912, 480.9 912, 498 912" fill="none" stroke="rgba(245, 158, 11, 0.45)" stroke-width="1.8" stroke-dasharray="5 3" marker-end="url(#arrowhead-security)"/>
+        <path class="edge-flow" d="M 460 912 C 477.1 912, 480.9 912, 498 912" fill="none" stroke="#fbbf24" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="453.4" y="903" width="51.199999999999996" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(245, 158, 11, 0.3)"/>
+            <text x="479" y="915" text-anchor="middle" fill="#fde68a" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Secrets</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-72"
+         data-source="azurerm_linux_function_app.reconciler"
+         data-target="azurerm_servicebus_queue.dead_letter"
+         data-label="Enqueue"
+         data-type="solid">
+        <title>azurerm_linux_function_app.reconciler ➔ azurerm_servicebus_queue.dead_letter (Enqueue)</title>
+        <path class="edge-hit" d="M 280 912 C 262.9 912, 259.1 912, 242 912" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 280 912 C 262.9 912, 259.1 912, 242 912" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 280 912 C 262.9 912, 259.1 912, 242 912" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="235.4" y="903" width="51.199999999999996" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="261" y="915" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Enqueue</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-73"
+         data-source="azurerm_linux_function_app.reconciler"
+         data-target="azurerm_servicebus_topic.orders"
+         data-label="Publish"
+         data-type="solid">
+        <title>azurerm_linux_function_app.reconciler ➔ azurerm_servicebus_topic.orders (Publish)</title>
+        <path class="edge-hit" d="M 460 890.7 C 576.145 890.7, 601.955 829.7, 718.1 829.7" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 460 890.7 C 576.145 890.7, 601.955 829.7, 718.1 829.7" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 460 890.7 C 576.145 890.7, 601.955 829.7, 718.1 829.7" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="563.4499999999999" y="851.2" width="51.199999999999996" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="589.05" y="863.2" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Publish</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-74"
+         data-source="azurerm_kubernetes_cluster_node_pool.apps"
+         data-target="azurerm_postgresql_flexible_server.core"
+         data-label="SQL TCP:5432/3306"
+         data-type="solid">
+        <title>azurerm_kubernetes_cluster_node_pool.apps ➔ azurerm_postgresql_flexible_server.core (SQL TCP:5432/3306)</title>
+        <path class="edge-hit" d="M 206 440 C 206 485, 206 495, 206 540" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 206 440 C 206 485, 206 495, 206 540" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 206 440 C 206 485, 206 495, 206 540" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="152.4" y="481" width="107.19999999999999" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="206" y="493" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">SQL TCP:5432/3306</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-security "
+         data-id="edge-75"
+         data-source="azurerm_kubernetes_cluster_node_pool.apps"
+         data-target="azurerm_key_vault.platform"
+         data-label="Secrets"
+         data-type="security">
+        <title>azurerm_kubernetes_cluster_node_pool.apps ➔ azurerm_key_vault.platform (Secrets)</title>
+        <path class="edge-hit" d="M 236 440 C 236 633.6800000000001, 558.8 676.72, 558.8 870.4" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 236 440 C 236 633.6800000000001, 558.8 676.72, 558.8 870.4" fill="none" stroke="rgba(245, 158, 11, 0.45)" stroke-width="1.8" stroke-dasharray="5 3" marker-end="url(#arrowhead-security)"/>
+        <path class="edge-flow" d="M 236 440 C 236 633.6800000000001, 558.8 676.72, 558.8 870.4" fill="none" stroke="#fbbf24" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="371.79999999999995" y="646.2" width="51.199999999999996" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(245, 158, 11, 0.3)"/>
+            <text x="397.4" y="658.2" text-anchor="middle" fill="#fde68a" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Secrets</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-76"
+         data-source="azurerm_kubernetes_cluster_node_pool.apps"
+         data-target="azurerm_servicebus_queue.dead_letter"
+         data-label="Enqueue"
+         data-type="solid">
+        <title>azurerm_kubernetes_cluster_node_pool.apps ➔ azurerm_servicebus_queue.dead_letter (Enqueue)</title>
+        <path class="edge-hit" d="M 201.6 440 C 201.6 633.5, 154.6 676.5, 154.6 870" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 201.6 440 C 201.6 633.5, 154.6 676.5, 154.6 870" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 201.6 440 C 201.6 633.5, 154.6 676.5, 154.6 870" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="152.5" y="646" width="51.199999999999996" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="178.1" y="658" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Enqueue</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-77"
+         data-source="azurerm_kubernetes_cluster_node_pool.apps"
+         data-target="azurerm_servicebus_topic.orders"
+         data-label="Publish"
+         data-type="solid">
+        <title>azurerm_kubernetes_cluster_node_pool.apps ➔ azurerm_servicebus_topic.orders (Publish)</title>
+        <path class="edge-hit" d="M 265.2 440 C 482.95500000000004 440, 531.345 766.9, 749.1 766.9" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 265.2 440 C 482.95500000000004 440, 531.345 766.9, 749.1 766.9" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 265.2 440 C 482.95500000000004 440, 531.345 766.9, 749.1 766.9" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="481.54999999999995" y="594.45" width="51.199999999999996" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="507.15" y="606.45" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Publish</text>
+          </g>
+        
+      </g>
+    
+      <g class="diagram-edge edge-solid "
+         data-id="edge-78"
+         data-source="azurerm_servicebus_topic.orders"
+         data-target="azurerm_linux_function_app.reconciler"
+         data-label="Trigger"
+         data-type="solid">
+        <title>azurerm_servicebus_topic.orders ➔ azurerm_linux_function_app.reconciler (Trigger)</title>
+        <path class="edge-hit" d="M 720 829.3 C 603.855 829.3, 578.045 890.3, 461.9 890.3" fill="none" stroke="transparent" stroke-width="16"/>
+        <path class="edge-path" d="M 720 829.3 C 603.855 829.3, 578.045 890.3, 461.9 890.3" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.8"  marker-end="url(#arrowhead)"/>
+        <path class="edge-flow" d="M 720 829.3 C 603.855 829.3, 578.045 890.3, 461.9 890.3" fill="none" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round"/>
+        
+          <g class="edge-label-group edge-label-badge">
+            <rect x="565.35" y="850.8" width="51.199999999999996" height="18" rx="4"
+                  fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.12)"/>
+            <text x="590.95" y="862.8" text-anchor="middle" fill="#cbd5e1" font-size="9" font-weight="600" font-family="'JetBrains Mono', ui-monospace, monospace">Trigger</text>
+          </g>
+        
+      </g>
+    </g>
+    <g class="nodes-layer">
+      <g class="diagram-node"
+         data-id="azurerm_resource_group.platform"
+         transform="translate(60, 768)"
+         opacity="1"
+         style="cursor: pointer;">
+        <title>platform — azurerm_resource_group (create)</title>
+        <rect class="node-card" width="180" height="80" rx="10"
+              fill="#111827"
+              stroke="rgba(16, 185, 129, 0.5)"
+              stroke-width="1.5"
+              filter="url(#node-shadow)"/>
+        <circle cx="166" cy="14" r="7" fill="#10b981" />
+        <text x="166" y="17.5" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">+</text>
+        <rect x="10" y="19" width="42" height="42" rx="7" fill="#f8fafc"/>
+        <g transform="translate(17, 26)"><svg id="tfarch-azure-resource_group-a685cc8c-32ba-4d54-91da-3a125cb58ded" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="28" height="28"><g><g><path d="M.5,15.08a.16.16,0,0,0,.08.14l1.16.65L3.7,17a.17.17,0,0,0,.23-.06l.66-1.12a.16.16,0,0,0-.06-.21l-2.3-1.3a.17.17,0,0,1-.08-.14V3.85a.16.16,0,0,1,.08-.14l2.3-1.3a.16.16,0,0,0,.06-.21L3.93,1.08A.17.17,0,0,0,3.7,1L1.78,2.11l-1.2.67a.16.16,0,0,0-.08.14V15.08Z" fill="#949494" /><path d="M2.14,3.77l.06-.06,2.3-1.3a.14.14,0,0,0,.06-.21L3.9,1.08A.15.15,0,0,0,3.68,1L1.75,2.11.56,2.78s-.05,0-.06.06l.9.51Z" fill="#a3a3a3" /><path d="M4.5,15.59l-2.3-1.3a.22.22,0,0,1-.07-.09l-1.62,1,.05,0,1.15.65,2,1.11a.15.15,0,0,0,.22-.06l.66-1.12A.14.14,0,0,0,4.5,15.59Z" fill="#a3a3a3" /></g><path d="M17.5,15.08a.16.16,0,0,1-.08.14l-1.16.65L14.3,17a.17.17,0,0,1-.23-.06l-.66-1.12a.16.16,0,0,1,.06-.21l2.3-1.3a.17.17,0,0,0,.08-.14V3.85a.16.16,0,0,0-.08-.14l-2.3-1.3a.16.16,0,0,1-.06-.21l.66-1.12A.17.17,0,0,1,14.3,1l1.92,1.09,1.2.67a.16.16,0,0,1,.08.14V15.08Z" fill="#949494" /><path d="M15.86,3.77l-.06-.06-2.3-1.3a.14.14,0,0,1-.06-.21l.66-1.12A.15.15,0,0,1,14.32,1l1.93,1.09,1.19.67s0,0,.06.06l-.9.51Z" fill="#a3a3a3" /><path d="M13.5,15.59l2.3-1.3a.22.22,0,0,0,.07-.09l1.62,1,0,0-1.15.65-2,1.11a.15.15,0,0,1-.22-.06l-.66-1.12A.14.14,0,0,1,13.5,15.59Z" fill="#a3a3a3" /><polygon points="14.31 5.93 14.31 12.07 8.99 15.16 8.99 9.01 14.31 5.93" fill="#32bedd" /><polygon points="14.31 5.93 9 9.02 3.68 5.93 9 2.84 14.31 5.93" fill="#9cebff" /><polygon points="8.99 9.02 8.99 15.16 3.68 12.07 3.68 5.93 8.99 9.02" fill="#50e6ff" /><polygon points="3.68 12.07 8.99 9.01 8.99 15.16 3.68 12.07" fill="#9cebff" /><polygon points="14.31 12.07 8.99 9.01 8.99 15.16 14.31 12.07" fill="#50e6ff" /></g></svg></g>
+        <g transform="translate(56, 26)">
+          <text fill="#f8fafc" font-size="12" font-weight="700" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">platform</text>
+          <text y="16" fill="#94a3b8" font-size="9.5" font-family="'JetBrains Mono', ui-monospace, monospace">resource_group</text>
+          <text y="30" fill="#5C6670" font-size="8.5" font-weight="600" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Resource Group</text>
+        </g>
+      </g>
+    
+      <g class="diagram-node"
+         data-id="azurerm_kubernetes_cluster.platform"
+         transform="translate(116, 178)"
+         opacity="1"
+         style="cursor: pointer;">
+        <title>platform — azurerm_kubernetes_cluster (create)</title>
+        <rect class="node-card" width="180" height="80" rx="10"
+              fill="#111827"
+              stroke="rgba(16, 185, 129, 0.5)"
+              stroke-width="1.5"
+              filter="url(#node-shadow)"/>
+        <circle cx="166" cy="14" r="7" fill="#10b981" />
+        <text x="166" y="17.5" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">+</text>
+        <rect x="10" y="19" width="42" height="42" rx="7" fill="#f8fafc"/>
+        <g transform="translate(17, 26)"><svg id="tfarch-azure-aks-af6a2c42-bd48-4857-a479-aecf8b3de4f6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="28" height="28"><defs><linearGradient id="tfarch-azure-aks-b70c9cf1-bab8-47e0-bbdb-ce1cd664d268" x1="2.94" y1="3.74" x2="8.67" y2="3.74" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#b77af4" /><stop offset="1" stop-color="#773adc" /></linearGradient><linearGradient id="tfarch-azure-aks-beb69953-bd96-4515-8843-ac12546af936" x1="9.13" y1="3.79" x2="14.85" y2="3.79" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#b77af4" /><stop offset="1" stop-color="#773adc" /></linearGradient><linearGradient id="tfarch-azure-aks-a39c76e8-547e-4eb4-bc25-d81c0f8cda62" x1="0.01" y1="9.12" x2="5.73" y2="9.12" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#b77af4" /><stop offset="1" stop-color="#773adc" /></linearGradient><linearGradient id="tfarch-azure-aks-f0a2a491-17dc-4bb8-bbfc-ee58a5cf47da" x1="6.18" y1="9.08" x2="11.9" y2="9.08" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#b77af4" /><stop offset="1" stop-color="#773adc" /></linearGradient><linearGradient id="tfarch-azure-aks-efc6a56d-8585-417d-931a-1dac2114ccd0" x1="12.35" y1="9.13" x2="18.08" y2="9.13" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#b77af4" /><stop offset="1" stop-color="#773adc" /></linearGradient><linearGradient id="tfarch-azure-aks-e399aa93-341f-4df2-9c02-603b82b484c2" x1="2.87" y1="14.56" x2="8.6" y2="14.56" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#b77af4" /><stop offset="1" stop-color="#773adc" /></linearGradient><linearGradient id="tfarch-azure-aks-a152bba0-ba2b-483a-b8c1-0ae7de355990" x1="9.05" y1="14.6" x2="14.78" y2="14.6" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#b77af4" /><stop offset="1" stop-color="#773adc" /></linearGradient></defs><polygon points="5.8 1.22 2.94 1.75 2.94 5.65 5.8 6.26 8.67 5.11 8.67 2.2 5.8 1.22" fill="url(#tfarch-azure-aks-b70c9cf1-bab8-47e0-bbdb-ce1cd664d268)" /><path d="M5.91,6.2,8.53,5.14A.2.2,0,0,0,8.65,5V2.36a.21.21,0,0,0-.13-.18l-2.65-.9H5.75l-2.6.48A.2.2,0,0,0,3,1.94V5.47a.19.19,0,0,0,.15.19l2.63.55A.32.32,0,0,0,5.91,6.2Z" fill="none" /><path d="M2.94,1.75v3.9l2.89.61v-5Zm1.22,3.6-.81-.16v-3l.81-.13Zm1.26.23-.93-.15V2l.93-.16Z" fill="#341a6e" /><polygon points="11.99 1.27 9.13 1.8 9.13 5.7 11.99 6.31 14.85 5.15 14.85 2.25 11.99 1.27" fill="url(#tfarch-azure-aks-beb69953-bd96-4515-8843-ac12546af936)" /><path d="M9.13,1.8V5.7L12,6.31v-5Zm1.21,3.6-.81-.16v-3l.81-.13Zm1.26.23-.93-.15V2.05l.93-.17Z" fill="#341a6e" /><polygon points="2.87 6.6 0.01 7.13 0.01 11.03 2.87 11.64 5.74 10.49 5.74 7.58 2.87 6.6" fill="url(#tfarch-azure-aks-a39c76e8-547e-4eb4-bc25-d81c0f8cda62)" /><path d="M0,7.13V11l2.89.61v-5Zm1.21,3.61-.81-.17v-3l.81-.14ZM2.48,11l-.93-.15V7.38l.93-.16Z" fill="#341a6e" /><polygon points="9.04 6.56 6.18 7.09 6.18 10.99 9.04 11.61 11.9 10.45 11.9 7.54 9.04 6.56" fill="url(#tfarch-azure-aks-f0a2a491-17dc-4bb8-bbfc-ee58a5cf47da)" /><path d="M6.18,7.09V11l2.88.61v-5ZM7.39,10.7l-.81-.17v-3l.81-.14Zm1.26.22-.93-.15V7.34l.93-.16Z" fill="#341a6e" /><polygon points="15.21 6.61 12.35 7.14 12.35 11.04 15.21 11.65 18.08 10.5 18.08 7.59 15.21 6.61" fill="url(#tfarch-azure-aks-efc6a56d-8585-417d-931a-1dac2114ccd0)" /><path d="M12.35,7.14V11l2.89.61v-5Zm1.22,3.61-.81-.17v-3l.81-.14Zm1.26.22-.93-.15V7.39l.93-.16Z" fill="#341a6e" /><polygon points="5.73 12.04 2.87 12.56 2.87 16.46 5.73 17.08 8.6 15.92 8.6 13.02 5.73 12.04" fill="url(#tfarch-azure-aks-e399aa93-341f-4df2-9c02-603b82b484c2)" /><path d="M5.84,17,8.45,16a.18.18,0,0,0,.12-.18v-2.6A.2.2,0,0,0,8.44,13L5.8,12.1a.17.17,0,0,0-.12,0l-2.6.47a.19.19,0,0,0-.16.19v3.54a.19.19,0,0,0,.15.19L5.7,17A.23.23,0,0,0,5.84,17Z" fill="none" /><path d="M2.87,12.56v3.9l2.89.62V12Zm1.22,3.61L3.28,16V13l.81-.14Zm1.26.23-.93-.15V12.81l.93-.16Z" fill="#341a6e" /><polygon points="11.91 12.08 9.05 12.61 9.05 16.51 11.91 17.12 14.78 15.97 14.78 13.06 11.91 12.08" fill="url(#tfarch-azure-aks-a152bba0-ba2b-483a-b8c1-0ae7de355990)" /><path d="M9.05,12.61v3.9l2.89.61v-5Zm1.22,3.61-.81-.17v-3l.81-.14Zm1.26.22-.93-.15V12.86l.93-.16Z" fill="#341a6e" /></svg></g>
+        <g transform="translate(56, 26)">
+          <text fill="#f8fafc" font-size="12" font-weight="700" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">platform</text>
+          <text y="16" fill="#94a3b8" font-size="9.5" font-family="'JetBrains Mono', ui-monospace, monospace">kubernetes_clus…</text>
+          <text y="30" fill="#0078D4" font-size="8.5" font-weight="600" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Azure Kubernetes …</text>
+        </g>
+      </g>
+    
+      <g class="diagram-node"
+         data-id="azurerm_kubernetes_cluster_node_pool.apps"
+         transform="translate(116, 360)"
+         opacity="1"
+         style="cursor: pointer;">
+        <title>apps — azurerm_kubernetes_cluster_node_pool (create)</title>
+        <rect class="node-card" width="180" height="80" rx="10"
+              fill="#111827"
+              stroke="rgba(16, 185, 129, 0.5)"
+              stroke-width="1.5"
+              filter="url(#node-shadow)"/>
+        <circle cx="166" cy="14" r="7" fill="#10b981" />
+        <text x="166" y="17.5" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">+</text>
+        <rect x="10" y="19" width="42" height="42" rx="7" fill="#f8fafc"/>
+        <g transform="translate(17, 26)"><svg id="tfarch-azure-aks-af6a2c42-bd48-4857-a479-aecf8b3de4f6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="28" height="28"><defs><linearGradient id="tfarch-azure-aks-b70c9cf1-bab8-47e0-bbdb-ce1cd664d268" x1="2.94" y1="3.74" x2="8.67" y2="3.74" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#b77af4" /><stop offset="1" stop-color="#773adc" /></linearGradient><linearGradient id="tfarch-azure-aks-beb69953-bd96-4515-8843-ac12546af936" x1="9.13" y1="3.79" x2="14.85" y2="3.79" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#b77af4" /><stop offset="1" stop-color="#773adc" /></linearGradient><linearGradient id="tfarch-azure-aks-a39c76e8-547e-4eb4-bc25-d81c0f8cda62" x1="0.01" y1="9.12" x2="5.73" y2="9.12" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#b77af4" /><stop offset="1" stop-color="#773adc" /></linearGradient><linearGradient id="tfarch-azure-aks-f0a2a491-17dc-4bb8-bbfc-ee58a5cf47da" x1="6.18" y1="9.08" x2="11.9" y2="9.08" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#b77af4" /><stop offset="1" stop-color="#773adc" /></linearGradient><linearGradient id="tfarch-azure-aks-efc6a56d-8585-417d-931a-1dac2114ccd0" x1="12.35" y1="9.13" x2="18.08" y2="9.13" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#b77af4" /><stop offset="1" stop-color="#773adc" /></linearGradient><linearGradient id="tfarch-azure-aks-e399aa93-341f-4df2-9c02-603b82b484c2" x1="2.87" y1="14.56" x2="8.6" y2="14.56" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#b77af4" /><stop offset="1" stop-color="#773adc" /></linearGradient><linearGradient id="tfarch-azure-aks-a152bba0-ba2b-483a-b8c1-0ae7de355990" x1="9.05" y1="14.6" x2="14.78" y2="14.6" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#b77af4" /><stop offset="1" stop-color="#773adc" /></linearGradient></defs><polygon points="5.8 1.22 2.94 1.75 2.94 5.65 5.8 6.26 8.67 5.11 8.67 2.2 5.8 1.22" fill="url(#tfarch-azure-aks-b70c9cf1-bab8-47e0-bbdb-ce1cd664d268)" /><path d="M5.91,6.2,8.53,5.14A.2.2,0,0,0,8.65,5V2.36a.21.21,0,0,0-.13-.18l-2.65-.9H5.75l-2.6.48A.2.2,0,0,0,3,1.94V5.47a.19.19,0,0,0,.15.19l2.63.55A.32.32,0,0,0,5.91,6.2Z" fill="none" /><path d="M2.94,1.75v3.9l2.89.61v-5Zm1.22,3.6-.81-.16v-3l.81-.13Zm1.26.23-.93-.15V2l.93-.16Z" fill="#341a6e" /><polygon points="11.99 1.27 9.13 1.8 9.13 5.7 11.99 6.31 14.85 5.15 14.85 2.25 11.99 1.27" fill="url(#tfarch-azure-aks-beb69953-bd96-4515-8843-ac12546af936)" /><path d="M9.13,1.8V5.7L12,6.31v-5Zm1.21,3.6-.81-.16v-3l.81-.13Zm1.26.23-.93-.15V2.05l.93-.17Z" fill="#341a6e" /><polygon points="2.87 6.6 0.01 7.13 0.01 11.03 2.87 11.64 5.74 10.49 5.74 7.58 2.87 6.6" fill="url(#tfarch-azure-aks-a39c76e8-547e-4eb4-bc25-d81c0f8cda62)" /><path d="M0,7.13V11l2.89.61v-5Zm1.21,3.61-.81-.17v-3l.81-.14ZM2.48,11l-.93-.15V7.38l.93-.16Z" fill="#341a6e" /><polygon points="9.04 6.56 6.18 7.09 6.18 10.99 9.04 11.61 11.9 10.45 11.9 7.54 9.04 6.56" fill="url(#tfarch-azure-aks-f0a2a491-17dc-4bb8-bbfc-ee58a5cf47da)" /><path d="M6.18,7.09V11l2.88.61v-5ZM7.39,10.7l-.81-.17v-3l.81-.14Zm1.26.22-.93-.15V7.34l.93-.16Z" fill="#341a6e" /><polygon points="15.21 6.61 12.35 7.14 12.35 11.04 15.21 11.65 18.08 10.5 18.08 7.59 15.21 6.61" fill="url(#tfarch-azure-aks-efc6a56d-8585-417d-931a-1dac2114ccd0)" /><path d="M12.35,7.14V11l2.89.61v-5Zm1.22,3.61-.81-.17v-3l.81-.14Zm1.26.22-.93-.15V7.39l.93-.16Z" fill="#341a6e" /><polygon points="5.73 12.04 2.87 12.56 2.87 16.46 5.73 17.08 8.6 15.92 8.6 13.02 5.73 12.04" fill="url(#tfarch-azure-aks-e399aa93-341f-4df2-9c02-603b82b484c2)" /><path d="M5.84,17,8.45,16a.18.18,0,0,0,.12-.18v-2.6A.2.2,0,0,0,8.44,13L5.8,12.1a.17.17,0,0,0-.12,0l-2.6.47a.19.19,0,0,0-.16.19v3.54a.19.19,0,0,0,.15.19L5.7,17A.23.23,0,0,0,5.84,17Z" fill="none" /><path d="M2.87,12.56v3.9l2.89.62V12Zm1.22,3.61L3.28,16V13l.81-.14Zm1.26.23-.93-.15V12.81l.93-.16Z" fill="#341a6e" /><polygon points="11.91 12.08 9.05 12.61 9.05 16.51 11.91 17.12 14.78 15.97 14.78 13.06 11.91 12.08" fill="url(#tfarch-azure-aks-a152bba0-ba2b-483a-b8c1-0ae7de355990)" /><path d="M9.05,12.61v3.9l2.89.61v-5Zm1.22,3.61-.81-.17v-3l.81-.14Zm1.26.22-.93-.15V12.86l.93-.16Z" fill="#341a6e" /></svg></g>
+        <g transform="translate(56, 26)">
+          <text fill="#f8fafc" font-size="12" font-weight="700" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">apps</text>
+          <text y="16" fill="#94a3b8" font-size="9.5" font-family="'JetBrains Mono', ui-monospace, monospace">kubernetes_clus…</text>
+          <text y="30" fill="#0078D4" font-size="8.5" font-weight="600" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Azure Kubernetes …</text>
+        </g>
+      </g>
+    
+      <g class="diagram-node"
+         data-id="azurerm_container_registry.platform"
+         transform="translate(280, 768)"
+         opacity="1"
+         style="cursor: pointer;">
+        <title>platform — azurerm_container_registry (create)</title>
+        <rect class="node-card" width="180" height="80" rx="10"
+              fill="#111827"
+              stroke="rgba(16, 185, 129, 0.5)"
+              stroke-width="1.5"
+              filter="url(#node-shadow)"/>
+        <circle cx="166" cy="14" r="7" fill="#10b981" />
+        <text x="166" y="17.5" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">+</text>
+        <rect x="10" y="19" width="42" height="42" rx="7" fill="#f8fafc"/>
+        <g transform="translate(17, 26)"><svg id="tfarch-azure-container_registry-e9f7ba73-56b8-4864-96ff-dce80bef729a" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="28" height="28"><defs><linearGradient id="tfarch-azure-container_registry-bdf27dc6-025c-4805-8bfd-3a05defd3fbd" x1="8.637" y1="-1.991" x2="8.637" y2="16.739" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#5ea0ef" /><stop offset="1" stop-color="#0078d4" /></linearGradient><linearGradient id="tfarch-azure-container_registry-fcd6c6c7-e2eb-4a32-b914-3a8485585a1b" x1="12.96" y1="8.561" x2="12.96" y2="6.141" gradientTransform="matrix(1, 0, 0, -1, 0, 20)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#333132" /><stop offset="1" stop-color="#5b5a5c" /></linearGradient></defs><path d="M7.43,8.178l2.589-1.573,7.255,2.731A3.664,3.664,0,0,0,16.23,7.49l-.01-.05A4.194,4.194,0,0,0,14,6.32a4.91,4.91,0,0,0-5.1-4.7A5.071,5.071,0,0,0,4.06,4.91,4.621,4.621,0,0,0,0,9.39a4.73,4.73,0,0,0,4.89,4.54H7.43Z" fill="url(#tfarch-azure-container_registry-bdf27dc6-025c-4805-8bfd-3a05defd3fbd)" /><polygon points="10.07 7.159 10.08 11.439 17.99 13.119 17.99 10.139 10.07 7.159" fill="#767676" /><polyline points="10.07 7.159 7.93 8.459 7.93 12.439 10.08 11.439" fill="#999" /><polygon points="13.68 11.499 14.4 11.699 14.4 9.369 13.68 9.119 13.68 11.499" fill="#a3a3a3" /><polygon points="12.96 8.889 12.24 8.629 12.24 11.119 12.96 11.319 12.96 8.889" fill="#a3a3a3" /><polygon points="15.12 11.889 15.82 12.079 15.84 9.859 15.12 9.619 15.12 11.889" fill="#a3a3a3" /><polygon points="10.81 10.749 11.53 10.929 11.53 8.399 10.81 8.159 10.81 10.749" fill="#a3a3a3" /><polygon points="17.27 10.349 16.55 10.099 16.55 12.269 17.27 12.469 17.27 10.349" fill="#a3a3a3" /><path id="tfarch-azure-container_registry-ef0d1b54-a1e7-4cb9-a4e5-8a8518e7c127" d="M8.66,11.369l-.36.21V8.749l.36-.19Zm.71-3.22L9,8.389v2.75l.37-.2Z" fill="#b3b3b3" /><polygon points="17.99 13.119 15.83 13.859 7.93 12.439 10.08 11.439 17.99 13.119" fill="url(#tfarch-azure-container_registry-fcd6c6c7-e2eb-4a32-b914-3a8485585a1b)" /><polygon points="17.99 16.169 10.04 17.679 10.08 12.089 17.99 13.559 17.99 16.169" fill="#767676" /><polygon points="10.81 16.759 10.81 13.209 11.53 13.299 11.53 16.639 10.81 16.759" fill="#a3a3a3" /><polygon points="12.96 16.399 12.24 16.529 12.24 13.389 12.96 13.499 12.96 16.399 12.96 16.399" fill="#a3a3a3" /><polygon points="13.68 16.289 13.68 13.569 14.4 13.659 14.4 16.159 13.68 16.289" fill="#a3a3a3" /><polygon points="15.83 15.909 15.12 16.039 15.12 13.749 15.83 13.859 15.83 15.909" fill="#a3a3a3" /><polygon points="17.29 15.679 16.55 15.809 16.55 13.929 17.24 14.019 17.29 15.679" fill="#a3a3a3" /><path id="tfarch-azure-container_registry-b9f25eb4-4c88-45c2-bc4d-f992757d7e0e" d="M7.93,16.4v-3.26l2.16-1v5.6Z" fill="#999" /><path id="tfarch-azure-container_registry-eb9200a7-4693-4427-bdae-b33ce90ff7f2" d="M8.61,16.389l-.32-.16v-2.76l.32-.15Zm.77-3.45-.38.19v3.48l.37.19v-3.86Z" fill="#b3b3b3" /></svg></g>
+        <g transform="translate(56, 26)">
+          <text fill="#f8fafc" font-size="12" font-weight="700" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">platform</text>
+          <text y="16" fill="#94a3b8" font-size="9.5" font-family="'JetBrains Mono', ui-monospace, monospace">container_regis…</text>
+          <text y="30" fill="#0078D4" font-size="8.5" font-weight="600" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Container Registry</text>
+        </g>
+      </g>
+    
+      <g class="diagram-node"
+         data-id="azurerm_postgresql_flexible_server.core"
+         transform="translate(116, 542)"
+         opacity="1"
+         style="cursor: pointer;">
+        <title>core — azurerm_postgresql_flexible_server (create)</title>
+        <rect class="node-card" width="180" height="80" rx="10"
+              fill="#111827"
+              stroke="rgba(16, 185, 129, 0.5)"
+              stroke-width="1.5"
+              filter="url(#node-shadow)"/>
+        <circle cx="166" cy="14" r="7" fill="#10b981" />
+        <text x="166" y="17.5" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">+</text>
+        <rect x="10" y="19" width="42" height="42" rx="7" fill="#f8fafc"/>
+        <g transform="translate(17, 26)"><svg id="tfarch-azure-postgresql-fc890127-728b-4ac0-b5da-86cdfc191e86" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="28" height="28"><defs><linearGradient id="tfarch-azure-postgresql-a28dee20-4c71-46b5-b957-804c67da725a" x1="2.44" y1="10.67" x2="15.27" y2="10.67" gradientTransform="translate(0.14 -0.5) rotate(-0.01)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#005ba1" /><stop offset="0.07" stop-color="#0060a9" /><stop offset="0.36" stop-color="#0071c8" /><stop offset="0.52" stop-color="#0078d4" /><stop offset="0.64" stop-color="#0074cd" /><stop offset="0.82" stop-color="#006abb" /><stop offset="1" stop-color="#005ba1" /></linearGradient></defs><path d="M9,5.14c-3.54,0-6.41-1-6.41-2.32V15.18c0,1.27,2.82,2.3,6.32,2.32H9c3.54,0,6.41-1,6.41-2.32V2.82C15.41,4.1,12.54,5.14,9,5.14Z" fill="url(#tfarch-azure-postgresql-a28dee20-4c71-46b5-b957-804c67da725a)" /><path d="M15.41,2.82c0,1.28-2.87,2.32-6.41,2.32s-6.41-1-6.41-2.32S5.46.5,9,.5s6.41,1,6.41,2.32" fill="#e8e8e8" /><path d="M13.91,2.63c0,.82-2.2,1.48-4.91,1.48S4.08,3.45,4.08,2.64,6.28,1.16,9,1.16s4.91.66,4.91,1.47" fill="#50e6ff" /><path d="M9,3a11.65,11.65,0,0,0-3.9.57A11.53,11.53,0,0,0,9,4.11a11.47,11.47,0,0,0,3.89-.58A11.93,11.93,0,0,0,9,3Z" fill="#198ab3" /><path d="M12,9c0,.08,0,.24,0,.42a5.12,5.12,0,0,0-.08.63c0,.12,0,.3.05.46s0,.27,0,.36a1.68,1.68,0,0,1-.25.86.43.43,0,0,0,0,.07l.1.12a10.55,10.55,0,0,0,1.06-2.38h0c.28-.95.31-1.63.09-1.92a2.58,2.58,0,0,0-2.68-.86,3.29,3.29,0,0,1,.91.67A2.28,2.28,0,0,1,12,9Zm-.31.08a1.15,1.15,0,0,0-.79.09c-.29.18-.2.55,0,1a7.77,7.77,0,0,0,.35.85l.09.16h0c.05.08.08.15.11.2l.08.13a1.28,1.28,0,0,0,.18-.65,2.86,2.86,0,0,0,0-.33c0-.17,0-.36-.05-.49a6.1,6.1,0,0,1,.08-.69C11.71,9.24,11.72,9.13,11.73,9.05Zm-.3.41a.4.4,0,0,1-.18.1h0a.33.33,0,0,1-.14,0A.23.23,0,0,1,11,9.4h0c0-.07.11-.13.24-.15h.19s.09,0,.09.08A.2.2,0,0,1,11.43,9.46Zm-4.69.89c0-.07,0-.13,0-.17a1,1,0,0,0,0-.17,5.55,5.55,0,0,1,0-1A5.22,5.22,0,0,1,7,7.94,2.41,2.41,0,0,1,7.58,7,4.78,4.78,0,0,0,6.23,6.8a1.87,1.87,0,0,0-1.1.3A2,2,0,0,0,4.5,8.92,12.27,12.27,0,0,0,5,11.16c.34,1.14.73,1.84,1.07,1.95h0c.15.05.31,0,.47-.21.28-.34.54-.63.69-.8A1.88,1.88,0,0,1,6.74,10.35Zm.26.4a2.18,2.18,0,0,0,.06.56,1.5,1.5,0,0,0,.26.44,1.07,1.07,0,0,0,.35.25,1.09,1.09,0,0,0,.39.08c0-.17.14-.38.23-.6a4.35,4.35,0,0,0,.21-.59,6.61,6.61,0,0,0,0-1.11c0-.09,0-.19-.06-.3a.45.45,0,0,0-.12-.27l0,0A.66.66,0,0,0,8,9.08H7.8a1.56,1.56,0,0,0-.48.14A2,2,0,0,0,7,9.41v.11c0,.2,0,.41,0,.61v0a.86.86,0,0,1,0,.15l0,.39H7Zm.66-1.34,0,0a.46.46,0,0,1,.28,0,.6.6,0,0,1,.19.06c.09,0,.1.11.09.14h0a.37.37,0,0,1-.12.13A.3.3,0,0,1,8,9.73h0a.34.34,0,0,1-.28-.28Zm.74,3a.23.23,0,0,0-.13.06l-.14.17c-.17.21-.24.28-.73.38a.52.52,0,0,0-.26.1.58.58,0,0,0,.24.11,1.18,1.18,0,0,0,.72,0A1.7,1.7,0,0,0,8.45,13a.61.61,0,0,0,.2-.31.36.36,0,0,0-.1-.28A.15.15,0,0,0,8.4,12.39Zm4.61,0a1.63,1.63,0,0,1-1.13,0,.22.22,0,0,0-.14,0,.3.3,0,0,0-.17.14,1.09,1.09,0,0,0,0,.31,1.8,1.8,0,0,0,1.1-.1,1.36,1.36,0,0,0,.48-.34Zm-2.4-2.14c-.14-.41-.34-1,.18-1.36a1.35,1.35,0,0,1,.89-.15A3.18,3.18,0,0,0,11,7.64l-.1-.1-.06-.06h0a.34.34,0,0,0-.06-.06l0,0,0,0A2.34,2.34,0,0,0,10.11,7,2.63,2.63,0,0,0,9,6.78a1.52,1.52,0,0,0-.7.11A1.77,1.77,0,0,0,8,7a2.1,2.1,0,0,0-.74,1,5.84,5.84,0,0,0-.21,1,1.66,1.66,0,0,1,1-.23.84.84,0,0,1,.77.91,7.26,7.26,0,0,1,0,1.27,3.87,3.87,0,0,1-.23.63c-.06.17-.14.35-.18.49a.5.5,0,0,1,.38.14.66.66,0,0,1,.19.53H9c0,.08,0,.16,0,.24a6.55,6.55,0,0,0,.24,2.44.54.54,0,0,0,.24.21.6.6,0,0,0,.31.1,1.3,1.3,0,0,0,1-.34,1.05,1.05,0,0,0,.29-.66c.07-.45.22-1.7.24-2h0a.72.72,0,0,1,.09-.44.63.63,0,0,1,.27-.24A5.36,5.36,0,0,1,10.61,10.24Z" fill="#f2f2f2" /></svg></g>
+        <g transform="translate(56, 26)">
+          <text fill="#f8fafc" font-size="12" font-weight="700" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">core</text>
+          <text y="16" fill="#94a3b8" font-size="9.5" font-family="'JetBrains Mono', ui-monospace, monospace">postgresql_flex…</text>
+          <text y="30" fill="#0063B1" font-size="8.5" font-weight="600" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Azure Database fo…</text>
+        </g>
+      </g>
+    
+      <g class="diagram-node"
+         data-id="azurerm_servicebus_namespace.platform"
+         transform="translate(500, 768)"
+         opacity="1"
+         style="cursor: pointer;">
+        <title>platform — azurerm_servicebus_namespace (create)</title>
+        <rect class="node-card" width="180" height="80" rx="10"
+              fill="#111827"
+              stroke="rgba(16, 185, 129, 0.5)"
+              stroke-width="1.5"
+              filter="url(#node-shadow)"/>
+        <circle cx="166" cy="14" r="7" fill="#10b981" />
+        <text x="166" y="17.5" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">+</text>
+        <rect x="10" y="19" width="42" height="42" rx="7" fill="#f8fafc"/>
+        <g transform="translate(17, 26)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="28" height="28"><defs><linearGradient id="tfarch-azure-service_bus-bbd02878-309a-4490-8196-946338d0f593" x1="8.995" y1="10.299" x2="8.995" y2="13.199" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#005ba1" /><stop offset="0.258" stop-color="#00589d" /><stop offset="0.525" stop-color="#004f90" /><stop offset="0.796" stop-color="#003f7c" /><stop offset="1" stop-color="#003067" /></linearGradient></defs><g><g id="tfarch-azure-service_bus-b532e600-3623-4be6-9fa6-30d05fff56b1"><polygon points="13.387 7.4 13.382 7.396 13.382 7.384 13.363 7.384 8.997 4.405 4.631 7.384 4.612 7.384 4.612 7.396 4.606 7.4 4.612 7.4 4.612 13.201 13.382 13.201 13.382 7.4 13.387 7.4" fill="#50e6ff" /><path d="M4.606,7.4c0-.1.008,5.681.008,5.8L8.995,10.3Z" fill="#32bedd" /><path d="M13.384,7.4,8.995,10.3,13.376,13.2C13.376,13.083,13.384,7.3,13.384,7.4Z" fill="#198ab3" /><polygon points="8.995 10.299 4.614 13.194 4.614 13.199 13.376 13.199 13.376 13.194 8.995 10.299" fill="url(#tfarch-azure-service_bus-bbd02878-309a-4490-8196-946338d0f593)" /><g><path d="M1.072,1.43h1.29a0,0,0,0,1,0,0v3.6a.286.286,0,0,1-.286.286H.786A.286.286,0,0,1,.5,5.035V2A.572.572,0,0,1,1.072,1.43Z" fill="#999" /><path d="M1.072,1.43h1.29a0,0,0,0,1,0,0v3.6a.286.286,0,0,1-.286.286H.786A.286.286,0,0,1,.5,5.035V2A.572.572,0,0,1,1.072,1.43Z" fill="#999" opacity="0.5" /></g><g><path d="M15.638,1.43h1.29A.572.572,0,0,1,17.5,2V5.035a.286.286,0,0,1-.286.286h-1.29a.286.286,0,0,1-.286-.286V1.43A0,0,0,0,1,15.638,1.43Z" fill="#999" /><path d="M15.638,1.43h1.29A.572.572,0,0,1,17.5,2V5.035a.286.286,0,0,1-.286.286h-1.29a.286.286,0,0,1-.286-.286V1.43A0,0,0,0,1,15.638,1.43Z" fill="#999" opacity="0.5" /></g><path d="M8.66-6.163H9.907a0,0,0,0,1,0,0v17a0,0,0,0,1,0,0H8.66a.567.567,0,0,1-.567-.567V-5.6A.567.567,0,0,1,8.66-6.163Z" transform="translate(11.337 -6.663) rotate(90)" fill="#949494" /><g><path d="M.786,12.679h1.29a.286.286,0,0,1,.286.286v3.6a0,0,0,0,1,0,0H1.072A.572.572,0,0,1,.5,16V12.965A.286.286,0,0,1,.786,12.679Z" fill="#999" /><path d="M.786,12.679h1.29a.286.286,0,0,1,.286.286v3.6a0,0,0,0,1,0,0H1.072A.572.572,0,0,1,.5,16V12.965A.286.286,0,0,1,.786,12.679Z" fill="#999" opacity="0.5" /></g><g><path d="M15.924,12.679h1.29a.286.286,0,0,1,.286.286V16a.572.572,0,0,1-.572.572h-1.29a0,0,0,0,1,0,0v-3.6A.286.286,0,0,1,15.924,12.679Z" fill="#999" /><path d="M15.924,12.679h1.29a.286.286,0,0,1,.286.286V16a.572.572,0,0,1-.572.572h-1.29a0,0,0,0,1,0,0v-3.6A.286.286,0,0,1,15.924,12.679Z" fill="#999" opacity="0.5" /></g><path d="M8.66,7.163H9.907a0,0,0,0,1,0,0v17a0,0,0,0,1,0,0H8.66a.567.567,0,0,1-.567-.567V7.73A.567.567,0,0,1,8.66,7.163Z" transform="translate(-6.663 24.663) rotate(-90)" fill="#949494" /></g></g></svg></g>
+        <g transform="translate(56, 26)">
+          <text fill="#f8fafc" font-size="12" font-weight="700" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">platform</text>
+          <text y="16" fill="#94a3b8" font-size="9.5" font-family="'JetBrains Mono', ui-monospace, monospace">servicebus_name…</text>
+          <text y="30" fill="#C239B3" font-size="8.5" font-weight="600" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Service Bus</text>
+        </g>
+      </g>
+    
+      <g class="diagram-node"
+         data-id="azurerm_servicebus_topic.orders"
+         transform="translate(720, 768)"
+         opacity="1"
+         style="cursor: pointer;">
+        <title>orders — azurerm_servicebus_topic (create)</title>
+        <rect class="node-card" width="180" height="80" rx="10"
+              fill="#111827"
+              stroke="rgba(16, 185, 129, 0.5)"
+              stroke-width="1.5"
+              filter="url(#node-shadow)"/>
+        <circle cx="166" cy="14" r="7" fill="#10b981" />
+        <text x="166" y="17.5" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">+</text>
+        <rect x="10" y="19" width="42" height="42" rx="7" fill="#f8fafc"/>
+        <g transform="translate(17, 26)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="28" height="28"><defs><linearGradient id="tfarch-azure-service_bus-bbd02878-309a-4490-8196-946338d0f593" x1="8.995" y1="10.299" x2="8.995" y2="13.199" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#005ba1" /><stop offset="0.258" stop-color="#00589d" /><stop offset="0.525" stop-color="#004f90" /><stop offset="0.796" stop-color="#003f7c" /><stop offset="1" stop-color="#003067" /></linearGradient></defs><g><g id="tfarch-azure-service_bus-b532e600-3623-4be6-9fa6-30d05fff56b1"><polygon points="13.387 7.4 13.382 7.396 13.382 7.384 13.363 7.384 8.997 4.405 4.631 7.384 4.612 7.384 4.612 7.396 4.606 7.4 4.612 7.4 4.612 13.201 13.382 13.201 13.382 7.4 13.387 7.4" fill="#50e6ff" /><path d="M4.606,7.4c0-.1.008,5.681.008,5.8L8.995,10.3Z" fill="#32bedd" /><path d="M13.384,7.4,8.995,10.3,13.376,13.2C13.376,13.083,13.384,7.3,13.384,7.4Z" fill="#198ab3" /><polygon points="8.995 10.299 4.614 13.194 4.614 13.199 13.376 13.199 13.376 13.194 8.995 10.299" fill="url(#tfarch-azure-service_bus-bbd02878-309a-4490-8196-946338d0f593)" /><g><path d="M1.072,1.43h1.29a0,0,0,0,1,0,0v3.6a.286.286,0,0,1-.286.286H.786A.286.286,0,0,1,.5,5.035V2A.572.572,0,0,1,1.072,1.43Z" fill="#999" /><path d="M1.072,1.43h1.29a0,0,0,0,1,0,0v3.6a.286.286,0,0,1-.286.286H.786A.286.286,0,0,1,.5,5.035V2A.572.572,0,0,1,1.072,1.43Z" fill="#999" opacity="0.5" /></g><g><path d="M15.638,1.43h1.29A.572.572,0,0,1,17.5,2V5.035a.286.286,0,0,1-.286.286h-1.29a.286.286,0,0,1-.286-.286V1.43A0,0,0,0,1,15.638,1.43Z" fill="#999" /><path d="M15.638,1.43h1.29A.572.572,0,0,1,17.5,2V5.035a.286.286,0,0,1-.286.286h-1.29a.286.286,0,0,1-.286-.286V1.43A0,0,0,0,1,15.638,1.43Z" fill="#999" opacity="0.5" /></g><path d="M8.66-6.163H9.907a0,0,0,0,1,0,0v17a0,0,0,0,1,0,0H8.66a.567.567,0,0,1-.567-.567V-5.6A.567.567,0,0,1,8.66-6.163Z" transform="translate(11.337 -6.663) rotate(90)" fill="#949494" /><g><path d="M.786,12.679h1.29a.286.286,0,0,1,.286.286v3.6a0,0,0,0,1,0,0H1.072A.572.572,0,0,1,.5,16V12.965A.286.286,0,0,1,.786,12.679Z" fill="#999" /><path d="M.786,12.679h1.29a.286.286,0,0,1,.286.286v3.6a0,0,0,0,1,0,0H1.072A.572.572,0,0,1,.5,16V12.965A.286.286,0,0,1,.786,12.679Z" fill="#999" opacity="0.5" /></g><g><path d="M15.924,12.679h1.29a.286.286,0,0,1,.286.286V16a.572.572,0,0,1-.572.572h-1.29a0,0,0,0,1,0,0v-3.6A.286.286,0,0,1,15.924,12.679Z" fill="#999" /><path d="M15.924,12.679h1.29a.286.286,0,0,1,.286.286V16a.572.572,0,0,1-.572.572h-1.29a0,0,0,0,1,0,0v-3.6A.286.286,0,0,1,15.924,12.679Z" fill="#999" opacity="0.5" /></g><path d="M8.66,7.163H9.907a0,0,0,0,1,0,0v17a0,0,0,0,1,0,0H8.66a.567.567,0,0,1-.567-.567V7.73A.567.567,0,0,1,8.66,7.163Z" transform="translate(-6.663 24.663) rotate(-90)" fill="#949494" /></g></g></svg></g>
+        <g transform="translate(56, 26)">
+          <text fill="#f8fafc" font-size="12" font-weight="700" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">orders</text>
+          <text y="16" fill="#94a3b8" font-size="9.5" font-family="'JetBrains Mono', ui-monospace, monospace">servicebus_topic</text>
+          <text y="30" fill="#C239B3" font-size="8.5" font-weight="600" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Service Bus</text>
+        </g>
+      </g>
+    
+      <g class="diagram-node"
+         data-id="azurerm_servicebus_queue.dead_letter"
+         transform="translate(60, 872)"
+         opacity="1"
+         style="cursor: pointer;">
+        <title>dead_letter — azurerm_servicebus_queue (create)</title>
+        <rect class="node-card" width="180" height="80" rx="10"
+              fill="#111827"
+              stroke="rgba(16, 185, 129, 0.5)"
+              stroke-width="1.5"
+              filter="url(#node-shadow)"/>
+        <circle cx="166" cy="14" r="7" fill="#10b981" />
+        <text x="166" y="17.5" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">+</text>
+        <rect x="10" y="19" width="42" height="42" rx="7" fill="#f8fafc"/>
+        <g transform="translate(17, 26)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="28" height="28"><defs><linearGradient id="tfarch-azure-service_bus-bbd02878-309a-4490-8196-946338d0f593" x1="8.995" y1="10.299" x2="8.995" y2="13.199" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#005ba1" /><stop offset="0.258" stop-color="#00589d" /><stop offset="0.525" stop-color="#004f90" /><stop offset="0.796" stop-color="#003f7c" /><stop offset="1" stop-color="#003067" /></linearGradient></defs><g><g id="tfarch-azure-service_bus-b532e600-3623-4be6-9fa6-30d05fff56b1"><polygon points="13.387 7.4 13.382 7.396 13.382 7.384 13.363 7.384 8.997 4.405 4.631 7.384 4.612 7.384 4.612 7.396 4.606 7.4 4.612 7.4 4.612 13.201 13.382 13.201 13.382 7.4 13.387 7.4" fill="#50e6ff" /><path d="M4.606,7.4c0-.1.008,5.681.008,5.8L8.995,10.3Z" fill="#32bedd" /><path d="M13.384,7.4,8.995,10.3,13.376,13.2C13.376,13.083,13.384,7.3,13.384,7.4Z" fill="#198ab3" /><polygon points="8.995 10.299 4.614 13.194 4.614 13.199 13.376 13.199 13.376 13.194 8.995 10.299" fill="url(#tfarch-azure-service_bus-bbd02878-309a-4490-8196-946338d0f593)" /><g><path d="M1.072,1.43h1.29a0,0,0,0,1,0,0v3.6a.286.286,0,0,1-.286.286H.786A.286.286,0,0,1,.5,5.035V2A.572.572,0,0,1,1.072,1.43Z" fill="#999" /><path d="M1.072,1.43h1.29a0,0,0,0,1,0,0v3.6a.286.286,0,0,1-.286.286H.786A.286.286,0,0,1,.5,5.035V2A.572.572,0,0,1,1.072,1.43Z" fill="#999" opacity="0.5" /></g><g><path d="M15.638,1.43h1.29A.572.572,0,0,1,17.5,2V5.035a.286.286,0,0,1-.286.286h-1.29a.286.286,0,0,1-.286-.286V1.43A0,0,0,0,1,15.638,1.43Z" fill="#999" /><path d="M15.638,1.43h1.29A.572.572,0,0,1,17.5,2V5.035a.286.286,0,0,1-.286.286h-1.29a.286.286,0,0,1-.286-.286V1.43A0,0,0,0,1,15.638,1.43Z" fill="#999" opacity="0.5" /></g><path d="M8.66-6.163H9.907a0,0,0,0,1,0,0v17a0,0,0,0,1,0,0H8.66a.567.567,0,0,1-.567-.567V-5.6A.567.567,0,0,1,8.66-6.163Z" transform="translate(11.337 -6.663) rotate(90)" fill="#949494" /><g><path d="M.786,12.679h1.29a.286.286,0,0,1,.286.286v3.6a0,0,0,0,1,0,0H1.072A.572.572,0,0,1,.5,16V12.965A.286.286,0,0,1,.786,12.679Z" fill="#999" /><path d="M.786,12.679h1.29a.286.286,0,0,1,.286.286v3.6a0,0,0,0,1,0,0H1.072A.572.572,0,0,1,.5,16V12.965A.286.286,0,0,1,.786,12.679Z" fill="#999" opacity="0.5" /></g><g><path d="M15.924,12.679h1.29a.286.286,0,0,1,.286.286V16a.572.572,0,0,1-.572.572h-1.29a0,0,0,0,1,0,0v-3.6A.286.286,0,0,1,15.924,12.679Z" fill="#999" /><path d="M15.924,12.679h1.29a.286.286,0,0,1,.286.286V16a.572.572,0,0,1-.572.572h-1.29a0,0,0,0,1,0,0v-3.6A.286.286,0,0,1,15.924,12.679Z" fill="#999" opacity="0.5" /></g><path d="M8.66,7.163H9.907a0,0,0,0,1,0,0v17a0,0,0,0,1,0,0H8.66a.567.567,0,0,1-.567-.567V7.73A.567.567,0,0,1,8.66,7.163Z" transform="translate(-6.663 24.663) rotate(-90)" fill="#949494" /></g></g></svg></g>
+        <g transform="translate(56, 26)">
+          <text fill="#f8fafc" font-size="12" font-weight="700" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">dead_letter</text>
+          <text y="16" fill="#94a3b8" font-size="9.5" font-family="'JetBrains Mono', ui-monospace, monospace">servicebus_queue</text>
+          <text y="30" fill="#C239B3" font-size="8.5" font-weight="600" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Service Bus</text>
+        </g>
+      </g>
+    
+      <g class="diagram-node"
+         data-id="azurerm_linux_function_app.reconciler"
+         transform="translate(280, 872)"
+         opacity="1"
+         style="cursor: pointer;">
+        <title>reconciler — azurerm_linux_function_app (create)</title>
+        <rect class="node-card" width="180" height="80" rx="10"
+              fill="#111827"
+              stroke="rgba(16, 185, 129, 0.5)"
+              stroke-width="1.5"
+              filter="url(#node-shadow)"/>
+        <circle cx="166" cy="14" r="7" fill="#10b981" />
+        <text x="166" y="17.5" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">+</text>
+        <rect x="10" y="19" width="42" height="42" rx="7" fill="#f8fafc"/>
+        <g transform="translate(17, 26)"><svg id="tfarch-azure-functions-a2c88306-fa03-4e5b-b192-401f0b77808b" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="28" height="28"><defs><linearGradient id="tfarch-azure-functions-b403aca7-f387-4434-96b4-ae157edc835f" x1="-175.993" y1="-343.723" x2="-175.993" y2="-359.232" gradientTransform="translate(212.573 370.548) scale(1.156 1.029)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fea11b" /><stop offset="0.284" stop-color="#fea51a" /><stop offset="0.547" stop-color="#feb018" /><stop offset="0.8" stop-color="#ffc314" /><stop offset="1" stop-color="#ffd70f" /></linearGradient></defs><g><path d="M2.37,7.475H3.2a.267.267,0,0,1,.267.267v6.148a.533.533,0,0,1-.533.533H2.1a0,0,0,0,1,0,0V7.741a.267.267,0,0,1,.267-.267Z" transform="translate(12.507 16.705) rotate(134.919)" fill="#50e6ff" /><path d="M2.325,3.6h.833a.267.267,0,0,1,.267.267v6.583a0,0,0,0,1,0,0H2.591a.533.533,0,0,1-.533-.533V3.865A.267.267,0,0,1,2.325,3.6Z" transform="translate(5.759 0.114) rotate(44.919)" fill="#1490df" /></g><g><path d="M14.53,7.475h.833a.533.533,0,0,1,.533.533v6.148a.267.267,0,0,1-.267.267H14.8a.267.267,0,0,1-.267-.267V7.475a0,0,0,0,1,0,0Z" transform="translate(12.223 -7.555) rotate(45.081)" fill="#50e6ff" /><path d="M15.108,3.6h.833a0,0,0,0,1,0,0v6.583a.267.267,0,0,1-.267.267h-.833a.267.267,0,0,1-.267-.267V4.131a.533.533,0,0,1,.533-.533Z" transform="translate(31.022 1.222) rotate(135.081)" fill="#1490df" /></g><path d="M8.459,9.9H4.87a.193.193,0,0,1-.2-.181.166.166,0,0,1,.018-.075L8.991,1.13a.206.206,0,0,1,.186-.106h4.245a.193.193,0,0,1,.2.181.165.165,0,0,1-.035.1L8.534,7.966h4.928a.193.193,0,0,1,.2.181.176.176,0,0,1-.052.122L5.421,16.788c-.077.046-.624.5-.356-.189h0Z" fill="url(#tfarch-azure-functions-b403aca7-f387-4434-96b4-ae157edc835f)" /></svg></g>
+        <g transform="translate(56, 26)">
+          <text fill="#f8fafc" font-size="12" font-weight="700" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">reconciler</text>
+          <text y="16" fill="#94a3b8" font-size="9.5" font-family="'JetBrains Mono', ui-monospace, monospace">linux_function_…</text>
+          <text y="30" fill="#0078D4" font-size="8.5" font-weight="600" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Azure Functions</text>
+        </g>
+      </g>
+    
+      <g class="diagram-node"
+         data-id="azurerm_key_vault.platform"
+         transform="translate(500, 872)"
+         opacity="1"
+         style="cursor: pointer;">
+        <title>platform — azurerm_key_vault (create)</title>
+        <rect class="node-card" width="180" height="80" rx="10"
+              fill="#111827"
+              stroke="rgba(16, 185, 129, 0.5)"
+              stroke-width="1.5"
+              filter="url(#node-shadow)"/>
+        <circle cx="166" cy="14" r="7" fill="#10b981" />
+        <text x="166" y="17.5" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">+</text>
+        <rect x="10" y="19" width="42" height="42" rx="7" fill="#f8fafc"/>
+        <g transform="translate(17, 26)"><svg id="tfarch-azure-key_vault-bc93169a-24c4-4686-9f37-c7e4f53b3d34" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="28" height="28"><defs><radialGradient id="tfarch-azure-key_vault-fb114c93-7c16-4540-899a-0796041629e6" cx="9" cy="9" r="8.5" gradientUnits="userSpaceOnUse"><stop offset="0.18" stop-color="#5ea0ef" /><stop offset="0.56" stop-color="#5c9fee" /><stop offset="0.69" stop-color="#559ced" /><stop offset="0.78" stop-color="#4a97e9" /><stop offset="0.86" stop-color="#3990e4" /><stop offset="0.93" stop-color="#2387de" /><stop offset="0.99" stop-color="#087bd6" /><stop offset="1" stop-color="#0078d4" /></radialGradient><radialGradient id="tfarch-azure-key_vault-ec478bd3-5b38-4e7f-b661-11f355578bff" cx="38.95" cy="182.07" r="9.88" gradientTransform="translate(-28.71 -163.24) scale(0.94 0.94)" gradientUnits="userSpaceOnUse"><stop offset="0.27" stop-color="#ffd70f" /><stop offset="0.49" stop-color="#ffcb12" /><stop offset="0.88" stop-color="#feac19" /><stop offset="1" stop-color="#fea11b" /></radialGradient></defs><path id="tfarch-azure-key_vault-aacf8311-a317-400f-b613-74bd00da5ce3" d="M9,.5A8.5,8.5,0,1,0,17.5,9,8.51,8.51,0,0,0,9,.5ZM9,16.34A7.34,7.34,0,1,1,16.34,9,7.34,7.34,0,0,1,9,16.34Z" fill="url(#tfarch-azure-key_vault-fb114c93-7c16-4540-899a-0796041629e6)" /><circle cx="9" cy="9" r="7.34" fill="#fff" /><g><path id="tfarch-azure-key_vault-bd983c41-db73-40ec-a4f4-da1213fc9924" d="M13.44,7.33a1.84,1.84,0,0,0,0-2.59h0L10.29,1.58a1.83,1.83,0,0,0-2.58,0h0L4.56,4.74a1.84,1.84,0,0,0,0,2.59L7.18,10a.51.51,0,0,1,.15.36v4.88a.63.63,0,0,0,.18.44l1.2,1.2a.41.41,0,0,0,.58,0l1.16-1.16h0l.68-.68a.25.25,0,0,0,0-.34l-.49-.49a.27.27,0,0,1,0-.37l.49-.49a.25.25,0,0,0,0-.34l-.49-.49a.27.27,0,0,1,0-.37l.49-.49a.25.25,0,0,0,0-.34l-.68-.69v-.25ZM9,2.35A1,1,0,0,1,9,4.42,1,1,0,1,1,9,2.35Z" fill="url(#tfarch-azure-key_vault-ec478bd3-5b38-4e7f-b661-11f355578bff)" /><path id="tfarch-azure-key_vault-ad2e7e44-9bfd-4775-8bf4-8ef26a544921" d="M8.18,15.3h0a.23.23,0,0,0,.38-.17v-4a.24.24,0,0,0-.11-.2h0a.22.22,0,0,0-.34.2v4A.28.28,0,0,0,8.18,15.3Z" fill="#ff9300" opacity="0.75" /><rect id="tfarch-azure-key_vault-a996fbff-3936-4b24-b407-369336c143ba" x="6.48" y="5.79" width="5.17" height="0.61" rx="0.28" fill="#ff9300" opacity="0.75" /><rect id="tfarch-azure-key_vault-bb12d31c-3352-4a18-87dd-a169a4a8721d" x="6.48" y="6.78" width="5.17" height="0.61" rx="0.28" fill="#ff9300" opacity="0.75" /></g></svg></g>
+        <g transform="translate(56, 26)">
+          <text fill="#f8fafc" font-size="12" font-weight="700" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">platform</text>
+          <text y="16" fill="#94a3b8" font-size="9.5" font-family="'JetBrains Mono', ui-monospace, monospace">key_vault</text>
+          <text y="30" fill="#E81123" font-size="8.5" font-weight="600" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Key Vault</text>
+        </g>
+      </g>
+    
+      <g class="diagram-node"
+         data-id="azurerm_user_assigned_identity.workload"
+         transform="translate(720, 872)"
+         opacity="1"
+         style="cursor: pointer;">
+        <title>workload — azurerm_user_assigned_identity (create)</title>
+        <rect class="node-card" width="180" height="80" rx="10"
+              fill="#111827"
+              stroke="rgba(16, 185, 129, 0.5)"
+              stroke-width="1.5"
+              filter="url(#node-shadow)"/>
+        <circle cx="166" cy="14" r="7" fill="#10b981" />
+        <text x="166" y="17.5" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">+</text>
+        <rect x="10" y="19" width="42" height="42" rx="7" fill="#f8fafc"/>
+        <g transform="translate(17, 26)"><svg id="tfarch-azure-managed_identity-f807cdde-18f2-4574-ba14-f0b1eef94a4a" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="28" height="28"><defs><linearGradient id="tfarch-azure-managed_identity-bb67b154-af8f-4a53-a9ce-aa046b9398e9" x1="13.18" y1="13.01" x2="8.63" y2="4.38" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1988d9" /><stop offset="0.9" stop-color="#54aef0" /></linearGradient><linearGradient id="tfarch-azure-managed_identity-a47d7138-084a-471d-8d63-744e75b9e8a3" x1="11.22" y1="10.5" x2="14.37" y2="15.93" gradientUnits="userSpaceOnUse"><stop offset="0.1" stop-color="#54aef0" /><stop offset="0.29" stop-color="#4fabee" /><stop offset="0.51" stop-color="#41a2e9" /><stop offset="0.74" stop-color="#2a93e0" /><stop offset="0.88" stop-color="#1988d9" /></linearGradient></defs><g><polygon points="1.15 10.22 8.93 15.27 16.85 10.21 17.85 11.36 8.93 17.11 0.15 11.37 1.15 10.22" fill="#50e6ff" /><polygon points="1.73 9.58 8.93 1 16.28 9.59 8.93 14.23 1.73 9.58" fill="#fff" /><polygon points="8.93 1 8.93 14.23 1.73 9.58 8.93 1" fill="#50e6ff" /><polygon points="8.93 1 8.93 14.23 16.28 9.59 8.93 1" fill="url(#tfarch-azure-managed_identity-bb67b154-af8f-4a53-a9ce-aa046b9398e9)" /><polygon points="8.93 7.83 16.28 9.59 8.93 14.23 8.93 7.83" fill="#53b1e0" /><polygon points="8.93 14.23 1.73 9.58 8.93 7.83 8.93 14.23" fill="#9cebff" /><polygon points="8.93 17.11 17.85 11.36 16.85 10.21 8.93 15.27 8.93 17.11" fill="url(#tfarch-azure-managed_identity-a47d7138-084a-471d-8d63-744e75b9e8a3)" /><g><path id="tfarch-azure-managed_identity-e189a61f-631a-4122-bb2b-079e86004d96" d="M16.32,11.88a1.16,1.16,0,0,0,0-1.65h0l-2-2a1.16,1.16,0,0,0-1.64,0h0l-2,2a1.18,1.18,0,0,0,0,1.65l1.67,1.67a.32.32,0,0,1,.09.23v3.1a.36.36,0,0,0,.12.28l.76.76a.25.25,0,0,0,.37,0l.73-.73h0l.44-.44a.15.15,0,0,0,0-.21l-.31-.31a.16.16,0,0,1,0-.24l.31-.31a.16.16,0,0,0,0-.22l-.31-.31a.15.15,0,0,1,0-.23l.31-.32a.15.15,0,0,0,0-.21l-.44-.44v-.16ZM13.5,8.71a.66.66,0,1,1-.66.66.66.66,0,0,1,.66-.66Z" fill="#ffca00" /><path id="tfarch-azure-managed_identity-fb7033ee-4650-4886-80c7-eddf62560f85" d="M13,17h0a.14.14,0,0,0,.24-.11V14.33a.16.16,0,0,0-.06-.13h0a.14.14,0,0,0-.22.13v2.51A.15.15,0,0,0,13,17Z" fill="#ff9300" opacity="0.75" /><rect id="tfarch-azure-managed_identity-b166b8c2-b9ee-4c3d-bf7a-77bd5ce0570b" x="11.9" y="10.9" width="3.29" height="0.39" rx="0.18" fill="#ff9300" opacity="0.75" /><rect id="tfarch-azure-managed_identity-baf437fe-3483-4a25-94ba-1e84a64cd2eb" x="11.9" y="11.53" width="3.29" height="0.39" rx="0.18" fill="#ff9300" opacity="0.75" /></g></g></svg></g>
+        <g transform="translate(56, 26)">
+          <text fill="#f8fafc" font-size="12" font-weight="700" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">workload</text>
+          <text y="16" fill="#94a3b8" font-size="9.5" font-family="'JetBrains Mono', ui-monospace, monospace">user_assigned_i…</text>
+          <text y="30" fill="#E81123" font-size="8.5" font-weight="600" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Managed Identity</text>
+        </g>
+      </g>
+    
+      <g class="diagram-node"
+         data-id="azurerm_role_assignment.acr_pull"
+         transform="translate(60, 976)"
+         opacity="1"
+         style="cursor: pointer;">
+        <title>acr_pull — azurerm_role_assignment (create)</title>
+        <rect class="node-card" width="180" height="80" rx="10"
+              fill="#111827"
+              stroke="rgba(16, 185, 129, 0.5)"
+              stroke-width="1.5"
+              filter="url(#node-shadow)"/>
+        <circle cx="166" cy="14" r="7" fill="#10b981" />
+        <text x="166" y="17.5" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">+</text>
+        <rect x="10" y="19" width="42" height="42" rx="7" fill="#f8fafc"/>
+        <g transform="translate(17, 26)"><svg id="tfarch-azure-role_assignment-ed8fbe5c-618b-47ce-8d68-3dbd1e10f81a" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="28" height="28"><defs><linearGradient id="tfarch-azure-role_assignment-e78519cd-36d2-4ee5-987f-be84be24d95e" x1="7.93" y1="17.95" x2="7.93" y2="5.62" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#5e9624" /><stop offset="1" stop-color="#b4ec36" /></linearGradient><linearGradient id="tfarch-azure-role_assignment-ac3f95ec-6391-4f34-b431-9534d4cdf013" x1="7.95" y1="9.21" x2="7.95" y2="-2.02" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#5e9624" /><stop offset="1" stop-color="#b4ec36" /></linearGradient></defs><path d="M14,16.85a1.3,1.3,0,0,0,1.32-1.31.81.81,0,0,0,0-.16c-.52-4.15-2.88-7.53-7.4-7.53S1,10.71.51,15.39A1.34,1.34,0,0,0,1.7,16.85H14Z" fill="url(#tfarch-azure-role_assignment-e78519cd-36d2-4ee5-987f-be84be24d95e)" /><path d="M8,8.83a4.16,4.16,0,0,1-2.26-.66L7.92,14l2.22-5.79A4.2,4.2,0,0,1,8,8.83Z" fill="#fff" /><circle cx="7.95" cy="4.67" r="4.17" fill="url(#tfarch-azure-role_assignment-ac3f95ec-6391-4f34-b431-9534d4cdf013)" /><polygon points="17.49 11.13 17.49 15.37 13.85 17.5 13.85 13.26 17.49 11.13" fill="#32bedd" /><polygon points="17.49 11.13 13.85 13.26 10.21 11.13 13.85 9 17.49 11.13" fill="#9cebff" /><polygon points="13.85 13.26 13.85 17.5 10.21 15.37 10.21 11.13 13.85 13.26" fill="#50e6ff" /><polygon points="10.21 15.37 13.85 13.26 13.85 17.5 10.21 15.37" fill="#9cebff" /><polygon points="17.49 15.37 13.85 13.26 13.85 17.5 17.49 15.37" fill="#50e6ff" /></svg></g>
+        <g transform="translate(56, 26)">
+          <text fill="#f8fafc" font-size="12" font-weight="700" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">acr_pull</text>
+          <text y="16" fill="#94a3b8" font-size="9.5" font-family="'JetBrains Mono', ui-monospace, monospace">role_assignment</text>
+          <text y="30" fill="#E81123" font-size="8.5" font-weight="600" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Role Assignment</text>
+        </g>
+      </g>
+    
+      <g class="diagram-node"
+         data-id="azurerm_log_analytics_workspace.platform"
+         transform="translate(280, 976)"
+         opacity="1"
+         style="cursor: pointer;">
+        <title>platform — azurerm_log_analytics_workspace (update)</title>
+        <rect class="node-card" width="180" height="80" rx="10"
+              fill="#111827"
+              stroke="rgba(245, 158, 11, 0.5)"
+              stroke-width="1.5"
+              filter="url(#node-shadow)"/>
+        <circle cx="166" cy="14" r="7" fill="#f59e0b" />
+        <text x="166" y="17.5" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">~</text>
+        <rect x="10" y="19" width="42" height="42" rx="7" fill="#f8fafc"/>
+        <g transform="translate(17, 26)"><svg id="tfarch-azure-log_analytics-b388e944-5509-49c9-84d7-f38bffa995b2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="28" height="28"><defs><linearGradient id="tfarch-azure-log_analytics-a997e203-1d7d-4cb9-b131-5dc44e029b46" x1="5.23" y1="17.45" x2="5.23" y2="8.09" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1988d9" /><stop offset="0.9" stop-color="#54aef0" /></linearGradient><linearGradient id="tfarch-azure-log_analytics-e122e9d8-aee5-4f1a-a60e-b1eae355daa5" x1="11.5" y1="12.45" x2="11.5" y2="0.55" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#198ab3" /><stop offset="0.01" stop-color="#198bb4" /><stop offset="0.44" stop-color="#27b2d7" /><stop offset="0.79" stop-color="#2fcbed" /><stop offset="1" stop-color="#32d4f5" /></linearGradient></defs><path d="M5.59,13.13H9.91v4.32H5.59ZM1.15,17.45H4.87V13.13H.55v3.72A.6.6,0,0,0,1.15,17.45Zm-.6-5H4.87V8.09H.55Z" fill="url(#tfarch-azure-log_analytics-a997e203-1d7d-4cb9-b131-5dc44e029b46)" /><path d="M11.5.55a5.89,5.89,0,0,1,5.95,6,5.89,5.89,0,0,1-5.95,5.95H5.55V6.5A5.89,5.89,0,0,1,11.5.55Z" fill-rule="evenodd" fill="url(#tfarch-azure-log_analytics-e122e9d8-aee5-4f1a-a60e-b1eae355daa5)" /><rect x="7.59" y="5.65" width="1.36" height="4.08" fill="#fff" /><rect x="10.31" y="7.01" width="1.36" height="2.72" fill="#fff" /><rect x="13.03" y="4.29" width="1.36" height="5.44" fill="#fff" /></svg></g>
+        <g transform="translate(56, 26)">
+          <text fill="#f8fafc" font-size="12" font-weight="700" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">platform</text>
+          <text y="16" fill="#94a3b8" font-size="9.5" font-family="'JetBrains Mono', ui-monospace, monospace">log_analytics_w…</text>
+          <text y="30" fill="#8661C5" font-size="8.5" font-weight="600" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Log Analytics Wor…</text>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="legend">
+      <circle cx="46" cy="1132" r="5" fill="#10b981"/>
+      <text x="56" y="1136" fill="#94a3b8" font-size="11" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Create (+)</text>
+    
+      <circle cx="161" cy="1132" r="5" fill="#f59e0b"/>
+      <text x="171" y="1136" fill="#94a3b8" font-size="11" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Modify (~)</text>
+    
+      <circle cx="276" cy="1132" r="5" fill="#ef4444"/>
+      <text x="286" y="1136" fill="#94a3b8" font-size="11" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Destroy (-)</text>
+    
+      <circle cx="391" cy="1132" r="5" fill="#64748b"/>
+      <text x="401" y="1136" fill="#94a3b8" font-size="11" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Unchanged</text>
+    
+      <line x1="520" y1="1132" x2="542" y2="1132" stroke="#38bdf8" stroke-width="2" />
+      <text x="548" y="1136" fill="#94a3b8" font-size="11" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Traffic Flow</text>
+    
+      <line x1="655" y1="1132" x2="677" y2="1132" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3 2"/>
+      <text x="683" y="1136" fill="#94a3b8" font-size="11" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Security/Access</text>
+    
+      <line x1="790" y1="1132" x2="812" y2="1132" stroke="#818cf8" stroke-width="2" stroke-dasharray="4 2"/>
+      <text x="818" y="1136" fill="#94a3b8" font-size="11" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif">Dependency</text>
+    </g>
+</svg>

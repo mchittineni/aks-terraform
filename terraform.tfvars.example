@@ -1,0 +1,28 @@
+# General Project Configuration
+project_name = "cloud-platform"
+environment  = "dev"
+owner_email  = "platform-team@example.com"
+cost_center  = "infrastructure"
+
+# Azure Configuration
+azure_subscription_id = "00000000-0000-0000-0000-000000000000"
+azure_location        = "eastus"
+
+# Networking
+azure_vnet_address_space = ["10.0.0.0/16"]
+azure_subnet_prefixes    = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+
+# AKS Compute
+kubernetes_version     = "1.32"
+azure_vm_size          = "Standard_D2s_v5"
+azure_node_count       = 2
+enable_private_cluster = false
+
+# Database
+azure_db_name           = "appdb"
+azure_db_admin_username = "sqladmin"
+azure_db_sku_name       = "S0"
+
+# Monitoring
+enable_monitoring = true
+alert_email       = "alerts@example.com"
