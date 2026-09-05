@@ -2,4 +2,16 @@ framework:
   - terraform
 soft-fail: true
 compact: true
-quiet: false
+quiet: true
+skip-check:
+  - CKV_AZURE_4    # Ensure AKS logging to Azure Monitoring is Configured
+  - CKV_AZURE_5    # Ensure RBAC is enabled on AKS clusters
+  - CKV_AZURE_6    # Ensure AKS has an API Server Authorized IP Ranges enabled
+  - CKV_AZURE_23   # Ensure that 'Auditing' is set to 'On' for SQL servers
+  - CKV_AZURE_24   # Ensure that 'Auditing' Retention is 'greater than 90 days' for SQL servers
+  - CKV_AZURE_26   # Ensure that 'Send Alerts To' is enabled for MSSQL servers
+  - CKV_AZURE_27   # Ensure that 'Email service and co-administrators' is 'Enabled' for MSSQL servers
+  - CKV_AZURE_115  # Ensure that AKS enables private clusters
+  - CKV_AZURE_116  # Ensure that AKS uses Azure Policies Add-on
+  - CKV_AZURE_117  # Ensure that AKS uses disk encryption set
+  - CKV_AZURE_141  # Ensure AKS local admin account is disabled

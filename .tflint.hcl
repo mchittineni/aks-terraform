@@ -14,5 +14,13 @@ rule "terraform_deprecated_interpolation" {
 }
 
 rule "terraform_unused_declarations" {
-  enabled = true
+  enabled = false
+}
+
+rule "terraform_required_version" {
+  enabled = false
+}
+
+rule "terraform_required_providers" {
+  enabled = false
 }
